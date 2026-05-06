@@ -3,7 +3,7 @@
   "buildCommand": "pnpm --filter @whisky-hunter/web build",
   "outputDirectory": ".next",
   "env": {
-    "NEXT_PUBLIC_API_URL": "@api_url"
+    "NEXT_PUBLIC_API_URL": "https://api-placeholder.whisky-hunter.com"
   },
   "headers": [
     {
