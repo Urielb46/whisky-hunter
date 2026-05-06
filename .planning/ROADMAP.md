@@ -30,7 +30,13 @@
   3. Each price collection creates a new append-only snapshot row; no historical record is ever overwritten
   4. A failed scraper triggers an automated alert within the monitoring dashboard; the nightly scheduled run completes without unresolved failures
   5. Every listing displays a visible "last updated" timestamp; listings older than 48 hours are rendered with a stale-data visual indicator
-**Plans**: TBD
+**Plans**: 5 plans
+Plans:
+- [ ] 01-01-PLAN.md — Monorepo bootstrap, pnpm workspaces, Turbo, Vitest infrastructure
+- [ ] 01-02-PLAN.md — Drizzle ORM schema (6 tables), Zod RawProduct/NormalizedProduct schemas
+- [ ] 01-03-PLAN.md — [BLOCKING] Migration + partition DDL injection + seed retailers + canonical products
+- [ ] 01-04-PLAN.md — BullMQ scheduler, Playwright stealth factory, 10 retailer adapters, health emitter
+- [ ] 01-05-PLAN.md — Normalizer, entity resolver, staleness utility, API health endpoint, Dockerfile
 **Key risks**: Product deduplication is the most irreversible decision; Cloudflare anti-bot blocking on major retailers; append-only schema must be locked before any data enters production
 
 ---
@@ -112,7 +118,7 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Foundation | 0/3 | Not started | - |
+| 1. Data Foundation | 0/5 | Planned | - |
 | 2. Search & Catalog | 0/3 | Not started | - |
 | 3. Cost Calculator | 0/3 | Not started | - |
 | 4. User Layer & Freemium | 0/3 | Not started | - |
@@ -123,3 +129,4 @@
 
 *Roadmap created: 2026-05-03*
 *Requirements covered: 43/43*
+*Phase 1 plans created: 2026-05-04*

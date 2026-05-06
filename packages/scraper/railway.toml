@@ -1,0 +1,10 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "node dist/worker-entry.js"
+healthcheckPath = ""
+restartPolicyType = "always"
+
+[environments.production.variables]
+NODE_ENV = "production"

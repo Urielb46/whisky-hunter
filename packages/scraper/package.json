@@ -1,0 +1,39 @@
+{
+  "name": "@whisky-hunter/scraper",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "worker": "tsx --env-file=../../.env src/worker-entry.ts",
+    "scrape:test": "tsx src/cli/scrape-once.ts",
+    "lint": "echo 'no lint yet' && exit 0",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "bullmq": "5.76.5",
+    "ioredis": "5.10.1",
+    "playwright": "1.59.1",
+    "playwright-extra": "4.3.6",
+    "puppeteer-extra-plugin-stealth": "2.11.2",
+    "fastest-levenshtein": "1.0.16",
+    "robots-parser": "3.0.1",
+    "zod": "4.4.2",
+    "drizzle-orm": "0.45.2",
+    "postgres": "3.4.9",
+    "@whisky-hunter/database": "workspace:*",
+    "@whisky-hunter/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "2.1.8",
+    "@vitest/coverage-v8": "2.1.8",
+    "tsx": "4.21.0",
+    "typescript": "5.7.3"
+  }
+}
