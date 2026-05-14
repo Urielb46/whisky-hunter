@@ -3,9 +3,10 @@
  *
  * For each active price alert:
  *   1. Fetch the latest price snapshot for the product.
- *   2. Convert to GBP pence using the stored priceUsd + a live FX rate.
- *   3. If price <= targetPriceGbp → send Expo push notification (+ email fallback).
- *   4. Update lastTriggeredAt to avoid re-firing within the cooldown window.
+ *   2. Skip if snapshot is older than 12 hours (ALRT-03).
+ *   3. Convert to GBP pence using the stored priceUsd + a live FX rate.
+ *   4. If price <= targetPriceGbp → send Expo push + email fallback (ALRT-01, ALRT-02).
+ *   5. Update lastTriggeredAt; cooldown is 24 hours (ALRT-04).
  */
 
 import { Worker, Queue } from 'bullmq';
@@ -21,8 +22,8 @@ import { eq, and, desc, sql } from 'drizzle-orm';
 
 export const ALERT_QUEUE_NAME = 'price-alert-check';
 
-// 6-hour cooldown — don't re-fire an alert within this window
-const COOLDOWN_MS = 6 * 60 * 60 * 1000;
+// 24-hour cooldown — spec ALRT-04: at most one re-notification per 24h per (user × product)
+const COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
 // Approximate USD→GBP rate used as fallback when FX API is unavailable
 const FALLBACK_USD_TO_GBP = 0.79;
@@ -88,6 +89,7 @@ export function createPriceAlertWorker(): Worker {
             priceUsd:   priceSnapshots.priceUsd,
             currency:   priceSnapshots.currency,
             inStock:    priceSnapshots.inStock,
+            scrapedAt:  priceSnapshots.scrapedAt,
           })
           .from(priceSnapshots)
           .where(
@@ -97,6 +99,10 @@ export function createPriceAlertWorker(): Worker {
           .limit(1);
 
         if (!snapshot || !snapshot.inStock) continue;
+
+        // ALRT-03: skip if price data is older than 12 hours
+        const dataAgeMs = Date.now() - new Date(snapshot.scrapedAt).getTime();
+        if (dataAgeMs > 12 * 60 * 60 * 1000) continue;
 
         // Convert to GBP pence
         const priceUsd = parseFloat(
@@ -118,10 +124,13 @@ export function createPriceAlertWorker(): Worker {
           });
         }
 
-        // Email fallback (imported lazily to avoid circular dep with api pkg)
-        // In production, prefer push; email is belt-and-suspenders.
-        // Uncomment if you want email fallback from the scraper worker:
-        // await sendPriceAlertEmail(alert.userEmail, { ... });
+        // ALRT-01: email fallback — always send regardless of push token
+        await sendAlertEmail(alert.userEmail, {
+          productName:    productLabel,
+          currentPricePence: priceGbpPence,
+          targetPricePence:  alert.targetPricePence,
+          productId:      alert.productId,
+        });
 
         // Update lastTriggeredAt
         await db
@@ -177,6 +186,69 @@ async function sendExpoPush(
     }
   } catch (err) {
     console.error('[price-alert] push error:', err);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Email helper (direct Resend REST — no SDK dep in scraper package)
+// ---------------------------------------------------------------------------
+
+interface AlertEmailOpts {
+  productName: string;
+  currentPricePence: number;
+  targetPricePence: number;
+  productId: string;
+}
+
+async function sendAlertEmail(
+  to: string,
+  opts: AlertEmailOpts,
+): Promise<void> {
+  const apiKey = process.env['RESEND_API_KEY'];
+  if (!apiKey) {
+    console.warn('[price-alert] RESEND_API_KEY not set — skipping email');
+    return;
+  }
+
+  const from  = process.env['RESEND_FROM'] ?? 'WhiskyHunter <onboarding@resend.dev>';
+  const appUrl = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3001';
+  const current = (opts.currentPricePence / 100).toFixed(2);
+  const target  = (opts.targetPricePence  / 100).toFixed(2);
+  const url     = `${appUrl}/products/${opts.productId}`;
+  // Escape product name to prevent HTML injection in email clients
+  const safeName = opts.productName.replace(/[<>&"']/g, (c) => `&#${c.charCodeAt(0)};`);
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from,
+        to,
+        subject: `Price alert: ${opts.productName} is now £${current}`,
+        html: `
+          <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px">
+            <h2 style="color:#b8860b">🥃 Price Alert Triggered</h2>
+            <p><strong>${safeName}</strong> has dropped to
+               <strong>£${current}</strong> — below your target of £${target}.</p>
+            <a href="${url}"
+               style="display:inline-block;margin-top:16px;padding:12px 24px;
+                      background:#b8860b;color:#fff;border-radius:6px;
+                      text-decoration:none;font-weight:700">
+              View Product
+            </a>
+          </div>`,
+      }),
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      console.error('[price-alert] email send failed:', text);
+    }
+  } catch (err) {
+    console.error('[price-alert] email error:', err);
   }
 }
 

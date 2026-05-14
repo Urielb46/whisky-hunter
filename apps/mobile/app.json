@@ -40,9 +40,13 @@
       "typedRoutes": true
     },
     "extra": {
+      "router": {
+        "origin": false
+      },
       "eas": {
-        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+        "projectId": "292f1083-96ba-4ad3-bd28-a7c22ab03331"
       }
-    }
+    },
+    "owner": "urielboas"
   }
 }

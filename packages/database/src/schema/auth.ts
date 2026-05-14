@@ -16,7 +16,9 @@ export const users = pgTable('users', {
   // Freemium tier
   tier:          text('tier').notNull().default('free'), // 'free' | 'premium'
   // Expo push notification token (registered from mobile app)
-  pushToken:     text('push_token'),
+  pushToken:       text('push_token'),
+  // Stripe customer ID — set on first checkout, used for subscription management
+  stripeCustomerId: text('stripe_customer_id').unique(),
 });
 
 export const sessions = pgTable('sessions', {

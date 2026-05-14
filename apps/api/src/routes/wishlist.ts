@@ -9,11 +9,11 @@ import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { eq, and } from 'drizzle-orm';
 import { db, wishlists, products } from '@whisky-hunter/database';
-import { requireAuth } from '../middleware/require-auth.js';
+import { requirePremium } from '../middleware/require-auth.js';
 
 export const wishlistRoute = new Hono();
 
-wishlistRoute.use('/*', requireAuth);
+wishlistRoute.use('/*', requirePremium);
 
 // GET /api/wishlist
 wishlistRoute.get('/', async (c) => {

@@ -1,6 +1,6 @@
 # WhiskyHunter — Project Status
-**תאריך:** 6 מאי 2026  
-**סטאטוס כללי:** ✅ פיתוח הושלם · ⏳ טרם הועלה לאוויר
+**תאריך:** 12 מאי 2026  
+**סטאטוס כללי:** ✅ פיתוח הושלם · ✅ UI Design System הושלם · ⏳ טרם הועלה לאוויר
 
 ---
 
@@ -15,6 +15,7 @@
 | 5 | Web Frontend | ✅ הושלם | Next.js 15 App Router, search page, product detail, SSR |
 | 5b | Mobile App | ✅ הושלם | Expo SDK 52, Expo Router, tabs: search/wishlist/alerts, product detail |
 | 5c | Deployment Configs | ✅ הושלם | railway.toml (API + Scraper), vercel.json (Web) |
+| 6 | UI Design System (Stitch) | ✅ הושלם | 13 מסכים, design system מלא, HTML code מוכן — ראה פרטים למטה |
 
 **Typecheck:** ✅ עובר clean על כל ה-packages
 
@@ -114,6 +115,58 @@ packages/
 **קוד שחסר (תלוי credentials):**
 - `apps/mobile/app.json` — projectId של EAS (מתקבל רק אחרי `eas init`)
 - `NEXT_PUBLIC_API_URL` — URL של Railway API service
+
+---
+
+## UI Design System — Stitch (Google)
+
+**תאריך:** 12 מאי 2026  
+**פלטפורמה:** [stitch.withgoogle.com](https://stitch.withgoogle.com)  
+**Project ID:** `17103168079326692664`  
+**Design System ID:** `assets/9585011100005006120` — WhiskyHunter Design System
+
+### Design System
+
+| Token | ערך |
+|-------|-----|
+| Mode | Dark |
+| Primary | Amber Gold `#D4930F` |
+| Secondary | Barrel Brown `#8B4513` |
+| Headline Font | Playfair Display |
+| Body Font | Inter |
+| Roundness | Round 8 |
+| Color Variant | Tonal Spot |
+
+### מסכי Desktop
+
+| מסך | Screen ID | גובה |
+|-----|-----------|------|
+| Landing Page | `0c3cad0ed258483a8f5d72a7f0bed399` | 3466px |
+| Landing Page v2 | `21159ff1c1284d169511d8c6cffdcff1` | 4974px |
+| Search Results v1 | `242611487e454702bafb8a2254c3b976` | 2896px |
+| Search Results v2 | `6f5d8f710f8345c195da9f18e3fdd257` | 3048px |
+| Search Results v3 | `37bb30efb94b47c6ba710e5d7612e390` | 4018px |
+| Search Results v4 | `b544fe362de244d28b80d492fbb4b792` | 2746px |
+| Global Discovery Flow | `8b61aec4ff6b41fd9239f6c4eb81803e` | 1024px |
+
+### מסכי Mobile (Expo)
+
+| מסך | Screen ID | גובה |
+|-----|-----------|------|
+| Home & Search | `39d2bf29580043b8951d0a18862c1b0b` | 2238px |
+| Search Results | `6e889a61b875474b942078143689c562` | 2332px |
+| Product Detail v1 | `07c2cdddd74b48688806ecd90f4c4e84` | 3550px |
+| Product Detail v2 | `4a47d46297304ee09d911e5480426b71` | 3506px |
+| My Wishlist | `ca609013935a401c8866f997b4579a47` | 1954px |
+| Price Alerts | `6fae5291462b4d4e88dd302549aa4438` | 1768px |
+
+### כיצד לגשת ל-HTML Code
+
+כל מסך כולל HTML מוכן. לגישה דרך Stitch MCP:
+```
+project: projects/17103168079326692664
+design system: assets/9585011100005006120
+```
 
 ---
 
