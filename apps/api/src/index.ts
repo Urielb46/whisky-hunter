@@ -12,18 +12,20 @@ import { alertsRoute } from './routes/alerts.js';
 import { pushTokenRoute } from './routes/push-token.js';
 import { ageGateRoute } from './routes/age-gate.js';
 import { billingRoute } from './routes/billing.js';
-import { requireAgeGate } from './middleware/require-age-gate.js';
 
 const app = new Hono();
 
 app.use('*', logger());
-app.use('*', cors({ origin: ['http://localhost:3001', 'https://whiskyhunter.com'] }));
+app.use('*', cors({
+  origin: ['http://localhost:3001', 'https://whiskyhunter.com'],
+  credentials: true,
+  allowHeaders: ['Content-Type', 'Authorization'],
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+}));
 
-// Age gate — must be confirmed before accessing content routes (AUTH-05 / COMP-01)
-// Applied to search, products, and cost; NOT applied to auth or age-gate itself.
-app.use('/api/search/*', requireAgeGate);
-app.use('/api/products/*', requireAgeGate);
-app.use('/api/cost/*', requireAgeGate);
+// Age gate enforced client-side via AgeGateModal (localStorage + browser cookie).
+// Server-side cookie check removed — SSR requests cannot forward browser cookies
+// across origins (web:3001 → api:3000). The modal blocks UI until confirmed.
 
 app.route('/health', health);
 app.route('/api/auth', authRoute);

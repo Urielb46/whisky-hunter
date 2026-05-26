@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>WhiskyHunter - Macallan 18 Year Old</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        background: "#0A0A0A",
+                        surface: "#111111",
+                        surfaceElevated: "#1A1A1A",
+                        border: "#242424",
+                        primary: "#D4A853",
+                        primaryHover: "#E8C06A",
+                        primaryMuted: "rgba(212,168,83,0.12)",
+                        textPrimary: "#F0EDE8",
+                        textMuted: "#6B7280",
+                        textSubtle: "#9CA3AF",
+                        green: "#22C55E",
+                        red: "#EF4444"
+                    },
+                    fontFamily: {
+                        headline: ["Playfair Display", "serif"],
+                        display: ["Playfair Display", "serif"],
+                        body: ["Inter", "sans-serif"],
+                        label: ["Inter", "sans-serif"]
+                    },
+                    boxShadow: {
+                        glow: "0 0 15px rgba(212,168,83,0.3)"
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #0A0A0A; color: #F0EDE8; }
+        .amber-gradient { background: linear-gradient(135deg, #0f0a04, #2d1f0a); }
+        .glass-effect { backdrop-filter: blur(8px); background: rgba(17, 17, 17, 0.7); }
+    </style>
+</head>
+<body class="font-body text-textPrimary antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-[#111111] fixed top-0 w-full z-50 border-b border-[#242424] shadow-xl">
+<div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
+<a class="text-2xl font-headline font-bold text-[#D4A853] flex items-center gap-2" href="#">
+                🍹 WhiskyHunter
+            </a>
+<div class="hidden md:flex flex-1 mx-8 relative">
+<div class="relative w-full max-w-lg">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-textMuted text-xl">search</span>
+<input class="w-full bg-surfaceElevated border border-border rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-textPrimary placeholder:text-textMuted transition-all" placeholder="Search whiskies..." type="text"/>
+</div>
+</div>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-[#9CA3AF] hover:text-[#E8C06A] transition-all duration-300 font-body" href="#">Explore</a>
+<a class="text-[#9CA3AF] hover:text-[#E8C06A] transition-all duration-300 font-body" href="#">Distilleries</a>
+<a class="text-[#9CA3AF] hover:text-[#E8C06A] transition-all duration-300 font-body" href="#">Price Trends</a>
+<a class="text-[#9CA3AF] hover:text-[#E8C06A] transition-all duration-300 font-body" href="#">Auctions</a>
+</div>
+<div class="flex items-center gap-4 ml-4">
+<button class="hidden md:block text-textSubtle hover:text-textPrimary transition-colors font-body text-sm font-medium">Login</button>
+<button class="bg-primary text-background px-4 py-2 rounded-xl font-body text-sm font-bold hover:bg-primaryHover transition-colors">Sign Up</button>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-1 mt-24 mb-16 px-4 md:px-8 max-w-7xl mx-auto w-full">
+<!-- Breadcrumbs -->
+<nav aria-label="Breadcrumb" class="flex text-xs text-textMuted font-body mb-8">
+<ol class="inline-flex items-center space-x-1 md:space-x-3">
+<li class="inline-flex items-center">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+</li>
+<li>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-[14px] mx-1">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Search</a>
+</div>
+</li>
+<li aria-current="page">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-[14px] mx-1">chevron_right</span>
+<span class="text-textSubtle">Macallan 18</span>
+</div>
+</li>
+</ol>
+</nav>
+<!-- Product Hero -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-16">
+<!-- Left: Image Col (40%) -->
+<div class="lg:col-span-5 relative group">
+<div class="w-full h-[500px] rounded-xl amber-gradient border border-border flex items-center justify-center relative overflow-hidden transition-all duration-500 hover:shadow-glow group-hover:border-primary/50">
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,168,83,0.15)_0%,transparent_70%)]"></div>
+<!-- Badges -->
+<div class="absolute top-4 right-4 flex flex-col gap-2 z-10">
+<div class="bg-surfaceElevated/80 backdrop-blur-md rounded-full px-3 py-1.5 text-sm flex items-center gap-1.5 border border-border">
+                            🇬🇧 <span class="text-xs font-medium text-textSubtle">UK</span>
+</div>
+<button class="bg-surfaceElevated/80 backdrop-blur-md rounded-full p-2 border border-border hover:border-primary text-textSubtle hover:text-primary transition-colors flex items-center justify-center h-8 w-8">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+</button>
+</div>
+<div class="absolute bottom-4 left-4 z-10">
+<div class="bg-primary text-background px-4 py-2 rounded-lg shadow-lg">
+<span class="font-headline font-bold text-xl block">£189.99</span>
+<span class="text-[10px] font-bold tracking-wider uppercase opacity-80">Best Price</span>
+</div>
+</div>
+<!-- Emoji Bottle -->
+<div class="text-[100px] drop-shadow-[0_0_30px_rgba(212,168,83,0.4)] relative z-0 transition-transform duration-500 group-hover:scale-105">
+                        🥃
+                    </div>
+</div>
+</div>
+<!-- Right: Details Col (60%) -->
+<div class="lg:col-span-7 flex flex-col justify-center">
+<div class="mb-6">
+<span class="text-primary text-xs font-bold tracking-[0.2em] uppercase mb-2 block">Macallan</span>
+<h1 class="font-headline text-4xl md:text-5xl font-bold text-textPrimary leading-tight mb-4">
+                        Macallan 18 Year Old <br class="hidden md:block"/>Sherry Oak
+                    </h1>
+<div class="flex items-center gap-3 mb-6">
+<div class="flex items-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined">star_half</span>
+</div>
+<span class="text-textPrimary font-bold">4.8</span>
+<span class="text-textMuted text-sm">(127 reviews)</span>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="px-3 py-1 rounded-full bg-surface border border-border text-xs text-textSubtle">18yr</span>
+<span class="px-3 py-1 rounded-full bg-surface border border-border text-xs text-textSubtle">43% ABV</span>
+<span class="px-3 py-1 rounded-full bg-surface border border-border text-xs text-textSubtle">Speyside</span>
+<span class="px-3 py-1 rounded-full bg-surface border border-border text-xs text-textSubtle">700ml</span>
+<span class="px-3 py-1 rounded-full bg-surface border border-border text-xs text-primary bg-primaryMuted">Sherry Oak</span>
+</div>
+<p class="text-textMuted text-sm leading-relaxed mb-8 max-w-2xl font-body">
+                        Rich, fruity, and complex with notes of dried fruits, chocolate, and wood spice. Matured exclusively in Sherry-seasoned oak casks from Jerez, Spain, delivering a timeless classic profile beloved by collectors and enthusiasts alike.
+                    </p>
+</div>
+<!-- Best Price Box -->
+<div class="bg-surface rounded-xl border border-primary p-6 mb-6 relative overflow-hidden shadow-[0_0_20px_rgba(212,168,83,0.05)]">
+<div class="absolute -right-10 -top-10 w-32 h-32 bg-primaryMuted rounded-full blur-2xl"></div>
+<div class="flex justify-between items-start mb-4 relative z-10">
+<div>
+<span class="text-xs text-textMuted uppercase tracking-wider font-bold mb-1 block">Current Best Price</span>
+<div class="flex items-baseline gap-2">
+<span class="font-headline text-3xl font-bold text-primary">£189.99</span>
+<span class="text-textMuted text-sm">Abbey Whisky 🇬🇧</span>
+</div>
+</div>
+<div class="text-right">
+<div class="flex items-center gap-1.5 justify-end text-green text-xs font-medium mb-1">
+<div class="w-2 h-2 rounded-full bg-green animate-pulse"></div>
+                                ✓ In stock
+                            </div>
+<span class="text-[10px] text-textMuted">Updated 2h ago</span>
+</div>
+</div>
+<button class="w-full bg-primary hover:bg-primaryHover text-background font-bold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 relative z-10">
+                        View at Abbey Whisky 
+                        <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+<!-- Secondary Actions -->
+<div class="flex flex-col sm:flex-row gap-3">
+<button class="flex-1 bg-surface hover:bg-surfaceElevated border border-border text-textPrimary py-2.5 px-4 rounded-xl transition-colors text-sm font-medium flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+                        Add to Wishlist
+                    </button>
+<button class="flex-1 bg-surface hover:bg-surfaceElevated border border-border text-textPrimary py-2.5 px-4 rounded-xl transition-colors text-sm font-medium flex items-center justify-center gap-2 relative">
+<span class="material-symbols-outlined text-[18px]">notifications</span>
+                        Set Price Alert
+                        <span class="absolute -top-2 -right-2 bg-primary text-background text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">Pro</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Tabs -->
+<div class="border-b border-border mb-8">
+<nav class="flex gap-8">
+<button class="text-primary font-bold border-b-2 border-primary pb-3 text-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">storefront</span>
+                    Retailer Prices
+                </button>
+<button class="text-textMuted hover:text-textPrimary transition-colors pb-3 text-sm flex items-center gap-2 font-medium">
+<span class="material-symbols-outlined text-[18px]">calculate</span>
+                    True Cost Calc
+                </button>
+<button class="text-textMuted hover:text-textPrimary transition-colors pb-3 text-sm flex items-center gap-2 font-medium">
+<span class="material-symbols-outlined text-[18px]">description</span>
+                    Notes &amp; Specs
+                </button>
+</nav>
+</div>
+<!-- Prices Table Section -->
+<section class="mb-16">
+<div class="bg-surface rounded-xl border border-border overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead class="bg-surfaceElevated border-b border-border text-textMuted font-medium">
+<tr>
+<th class="px-6 py-4 rounded-tl-xl">Retailer</th>
+<th class="px-6 py-4">Country</th>
+<th class="px-6 py-4">Price</th>
+<th class="px-6 py-4">Stock</th>
+<th class="px-6 py-4 text-right rounded-tr-xl">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border">
+<!-- Row 1 Active -->
+<tr class="hover:bg-surfaceElevated/50 transition-colors relative">
+<td class="px-6 py-4 font-medium text-textPrimary relative">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+                                    Abbey Whisky
+                                </td>
+<td class="px-6 py-4">🇬🇧 UK</td>
+<td class="px-6 py-4 font-headline font-bold text-primary">£189.99</td>
+<td class="px-6 py-4">
+<span class="text-green flex items-center gap-1.5 text-xs">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> In Stock
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 px-4 py-1.5 rounded-lg font-medium transition-colors text-xs flex items-center gap-1 ml-auto">
+                                        Buy <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surfaceElevated/50 transition-colors">
+<td class="px-6 py-4 text-textSubtle">The Whisky Barrel</td>
+<td class="px-6 py-4 text-textSubtle">🇬🇧 UK</td>
+<td class="px-6 py-4 font-headline text-textPrimary">£194.50</td>
+<td class="px-6 py-4">
+<span class="text-green flex items-center gap-1.5 text-xs">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> In Stock
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-surface hover:bg-border border border-border text-textPrimary px-4 py-1.5 rounded-lg font-medium transition-colors text-xs ml-auto">
+                                        Buy →
+                                    </button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surfaceElevated/50 transition-colors">
+<td class="px-6 py-4 text-textSubtle">Master of Malt</td>
+<td class="px-6 py-4 text-textSubtle">🇬🇧 UK</td>
+<td class="px-6 py-4 font-headline text-textPrimary">£198.00</td>
+<td class="px-6 py-4">
+<span class="text-green flex items-center gap-1.5 text-xs">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> In Stock
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-surface hover:bg-border border border-border text-textPrimary px-4 py-1.5 rounded-lg font-medium transition-colors text-xs ml-auto">
+                                        Buy →
+                                    </button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surfaceElevated/50 transition-colors">
+<td class="px-6 py-4 text-textSubtle">Total Wine</td>
+<td class="px-6 py-4 text-textSubtle">🇺🇸 USA</td>
+<td class="px-6 py-4 font-headline text-textPrimary">$229.99</td>
+<td class="px-6 py-4">
+<span class="text-green flex items-center gap-1.5 text-xs">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> In Stock
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-surface hover:bg-border border border-border text-textPrimary px-4 py-1.5 rounded-lg font-medium transition-colors text-xs ml-auto">
+                                        Buy →
+                                    </button>
+</td>
+</tr>
+<!-- Row 5 Out of Stock -->
+<tr class="hover:bg-surfaceElevated/50 transition-colors opacity-75">
+<td class="px-6 py-4 text-textMuted">LCBO</td>
+<td class="px-6 py-4 text-textMuted">🇨🇦 CAN</td>
+<td class="px-6 py-4 font-headline text-textMuted">CA$289.00</td>
+<td class="px-6 py-4">
+<span class="text-red flex items-center gap-1.5 text-xs">
+<span class="material-symbols-outlined text-[14px]">cancel</span> Out of Stock
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-surface border border-border text-textMuted px-4 py-1.5 rounded-lg font-medium hover:text-textPrimary transition-colors text-xs ml-auto flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">notifications</span> Notify
+                                    </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#0A0A0A] border-t border-[#242424] w-full mt-auto flex flex-col md:flex-row justify-between items-center px-8 py-12 gap-6">
+<div class="text-xl font-headline font-bold text-[#D4A853]">
+            🍹 WhiskyHunter
+        </div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-[#6B7280] hover:text-[#F0EDE8] transition-colors font-body text-sm" href="#">Terms of Service</a>
+<a class="text-[#6B7280] hover:text-[#F0EDE8] transition-colors font-body text-sm" href="#">Privacy Policy</a>
+<a class="text-[#6B7280] hover:text-[#F0EDE8] transition-colors font-body text-sm" href="#">Contact Us</a>
+<a class="text-[#6B7280] hover:text-[#F0EDE8] transition-colors font-body text-sm" href="#">About</a>
+</div>
+<div class="text-[#6B7280] font-body text-sm text-center md:text-right">
+            © 2024 WhiskyHunter. 18+ only. Drink responsibly.
+        </div>
+</footer>
+</body></html>

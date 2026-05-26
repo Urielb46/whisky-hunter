@@ -2,14 +2,22 @@
 -- wishlists.product_id and price_alerts.product_id are text columns referencing
 -- products.id (uuid). A true FK is not possible without a type change (breaking).
 -- Use CHECK constraints to enforce UUID format integrity instead.
+-- Note: ADD CONSTRAINT IF NOT EXISTS is not valid PostgreSQL syntax;
+--       use DO $$ ... EXCEPTION WHEN duplicate_object THEN NULL; END $$; instead.
 
-ALTER TABLE "wishlists"
-  ADD CONSTRAINT IF NOT EXISTS "wishlists_product_id_valid_uuid"
-  CHECK (product_id ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+DO $$ BEGIN
+  ALTER TABLE "wishlists"
+    ADD CONSTRAINT "wishlists_product_id_valid_uuid"
+    CHECK (product_id ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
-ALTER TABLE "price_alerts"
-  ADD CONSTRAINT IF NOT EXISTS "price_alerts_product_id_valid_uuid"
-  CHECK (product_id ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+DO $$ BEGIN
+  ALTER TABLE "price_alerts"
+    ADD CONSTRAINT "price_alerts_product_id_valid_uuid"
+    CHECK (product_id ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Performance indexes (missing from 0001_auth.sql)
 CREATE INDEX IF NOT EXISTS "wishlists_user_id_idx"

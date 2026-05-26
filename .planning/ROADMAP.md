@@ -9,12 +9,12 @@
 
 ## Phases
 
-- [ ] **Phase 1: Data Foundation** — Reliable scraping pipeline and canonical product master that can ingest, deduplicate, and store prices from 10+ UK/US/EU retailers
-- [ ] **Phase 2: Search & Catalog** — Typesense-powered search with typo tolerance, faceted filters, product detail pages, and aggregated professional ratings
-- [ ] **Phase 3: Cost Calculator** — Landed-cost engine that surfaces every fee (duty, VAT, FX, shipping, insurance) with compliance warnings for restricted shipping routes
-- [ ] **Phase 4: User Layer & Freemium** — Authentication, Stripe subscriptions, freemium gating, and Wishlist for premium users
-- [ ] **Phase 5: Price Alerts** — Alert subscription system with email (Resend) and push (Expo/FCM/APNs) delivery, staleness gating, and rate limiting
-- [ ] **Phase 6: Web & Mobile Apps** — Production-ready Next.js web app and Expo iOS/Android apps, App Store / Play Store submission
+- [x] **Phase 1: Data Foundation** — Reliable scraping pipeline and canonical product master that can ingest, deduplicate, and store prices from 10+ UK/US/EU retailers; Whiskybase catalog seed populates images, scores, and canonical names
+- [x] **Phase 2: Search & Catalog** — Typesense-powered search with typo tolerance, faceted filters, product detail pages, and aggregated professional ratings
+- [x] **Phase 3: Cost Calculator** — Landed-cost engine that surfaces every fee (duty, VAT, FX, shipping, insurance) with compliance warnings for restricted shipping routes
+- [x] **Phase 4: User Layer & Freemium** — Authentication, Stripe subscriptions, freemium gating, and Wishlist for premium users
+- [x] **Phase 5: Price Alerts** — Alert subscription system with email (Resend) and push (Expo/FCM/APNs) delivery, staleness gating, and rate limiting
+- [x] **Phase 6: Web & Mobile Apps** — Production-ready Next.js web app and Expo iOS/Android apps, App Store / Play Store submission
 
 ---
 
@@ -30,14 +30,15 @@
   3. Each price collection creates a new append-only snapshot row; no historical record is ever overwritten
   4. A failed scraper triggers an automated alert within the monitoring dashboard; the nightly scheduled run completes without unresolved failures
   5. Every listing displays a visible "last updated" timestamp; listings older than 48 hours are rendered with a stale-data visual indicator
-**Plans**: 5 plans
+**Plans**: 6 plans
 Plans:
-- [ ] 01-01-PLAN.md — Monorepo bootstrap, pnpm workspaces, Turbo, Vitest infrastructure
-- [ ] 01-02-PLAN.md — Drizzle ORM schema (6 tables), Zod RawProduct/NormalizedProduct schemas
-- [ ] 01-03-PLAN.md — [BLOCKING] Migration + partition DDL injection + seed retailers + canonical products
-- [ ] 01-04-PLAN.md — BullMQ scheduler, Playwright stealth factory, 10 retailer adapters, health emitter
-- [ ] 01-05-PLAN.md — Normalizer, entity resolver, staleness utility, API health endpoint, Dockerfile
-**Key risks**: Product deduplication is the most irreversible decision; Cloudflare anti-bot blocking on major retailers; append-only schema must be locked before any data enters production
+- [x] 01-01-PLAN.md — Monorepo bootstrap, pnpm workspaces, Turbo, Vitest infrastructure
+- [x] 01-02-PLAN.md — Drizzle ORM schema (6 tables + whiskybase_id/review_score fields), Zod schemas
+- [x] 01-03-PLAN.md — [BLOCKING] Migration + partition DDL injection + seed retailers + canonical products
+- [x] 01-04-PLAN.md — BullMQ scheduler, Playwright stealth factory, 10 retailer adapters, health emitter
+- [x] 01-05-PLAN.md — Normalizer, entity resolver, staleness utility, API health endpoint, Dockerfile
+- [x] 01-06-PLAN.md — **[NEW 25526]** Whiskybase catalog seed: 15k+ products with images, scores, canonical names
+**Key risks**: Product deduplication is the most irreversible decision; Cloudflare anti-bot blocking on major retailers; append-only schema must be locked before any data enters production; Whiskybase robots.txt/ToS must be verified before scraping
 
 ---
 
@@ -50,7 +51,7 @@ Plans:
   2. A user can filter results by distillery, region, age, ABV, cask type, price range, and source country; filter state persists across pagination via URL
   3. Search results page first meaningful content arrives within 3 seconds on standard broadband
   4. Clicking a whisky from search results opens a product detail page listing all available vendor sources sorted by total cost
-  5. Each product page shows aggregated professional scores from Whisky Advocate and Jim Murray Whisky Bible alongside tasting notes
+  5. Each product page shows the Whiskybase community score, vote count, and a "View on Whiskybase →" link alongside tasting notes; aggregated professional scores (Whisky Advocate, Jim Murray) shown where available
 **Plans**: TBD
 **UI hint**: yes
 
@@ -118,15 +119,27 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Foundation | 0/5 | Planned | - |
-| 2. Search & Catalog | 0/3 | Not started | - |
-| 3. Cost Calculator | 0/3 | Not started | - |
-| 4. User Layer & Freemium | 0/3 | Not started | - |
-| 5. Price Alerts | 0/2 | Not started | - |
-| 6. Web & Mobile Apps | 0/3 | Not started | - |
+| 1. Data Foundation | 6/6 | ✅ Complete | 2026-05-26 |
+| 2. Search & Catalog | 3/3 | ✅ Complete | 2026-05-20 |
+| 3. Cost Calculator | 3/3 | ✅ Complete | 2026-05-20 |
+| 4. User Layer & Freemium | 3/3 | ✅ Complete | 2026-05-20 |
+| 5. Price Alerts | 2/2 | ✅ Complete | 2026-05-20 |
+| 6. Web & Mobile Apps | 3/3 | ✅ Complete | 2026-05-20 |
 
 ---
 
 *Roadmap created: 2026-05-03*
-*Requirements covered: 43/43*
+*Requirements covered: 47/47*
 *Phase 1 plans created: 2026-05-04*
+
+---
+
+## שדרוג 25526 — 2026-05-25
+
+**שינויים:**
+- Phase 1: הוסף Plan 01-06 — Whiskybase Catalog Seed (15k+ בקבוקים, תמונות, ציונים)
+- Phase 1: עדכן DB schema — הוסף שדות `whiskybase_id`, `review_score`, `review_count`, `whiskybase_url`
+- Phase 2: עדכן Success Criteria — ציון Whiskybase + "View on Whiskybase" במקום Whisky Advocate בלבד
+- מסמכים חדשים: `WHISKYBASE-INTEGRATION.md`, `RETAILERS-ADAPTERS.md`, `EXECUTION-ROADMAP.md`
+- Requirements: הוסף WBASE-01 עד WBASE-04; Whiskybase הוצא מ-Out of Scope
+- אומדן זמן כולל: ~34 שבועות (ראה `EXECUTION-ROADMAP.md`)

@@ -1,0 +1,27 @@
+{
+  "name": "@whisky-hunter/search",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "index": "tsx --env-file=../../.env src/indexer.ts",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "typesense": "^1.8.2",
+    "@whisky-hunter/database": "workspace:*",
+    "drizzle-orm": "0.45.2",
+    "postgres": "3.4.9"
+  },
+  "devDependencies": {
+    "tsx": "4.21.0",
+    "typescript": "5.7.3",
+    "@types/node": "22.15.21"
+  }
+}

@@ -22,6 +22,34 @@
       "when": 1746568800000,
       "tag": "0002_push_token",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1746655200000,
+      "tag": "0003_stripe",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1746741600000,
+      "tag": "0004_fk_indexes",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1748131200000,
+      "tag": "0005_whiskybase_fields",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1748217600000,
+      "tag": "9999_partition_create_helper",
+      "breakpoints": true
     }
   ]
 }

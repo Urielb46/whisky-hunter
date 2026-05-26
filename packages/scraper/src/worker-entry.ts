@@ -14,6 +14,11 @@ import {
   createPriceAlertWorker,
   ALERT_QUEUE_NAME,
 } from './jobs/price-alert-checker.js';
+import {
+  createWhiskybaseRefreshQueue,
+  createWhiskybaseRefreshWorker,
+  scheduleWhiskybaseRefresh,
+} from './jobs/whiskybase-refresh.js';
 
 const CONCURRENCY = parseInt(process.env['WORKER_CONCURRENCY'] ?? '2', 10);
 
@@ -45,6 +50,11 @@ async function main() {
     { name: ALERT_QUEUE_NAME, data: {} },
   );
 
+  // Boot the Whiskybase score refresh worker (runs every Sunday 03:00 UTC — WBASE-02)
+  const wbRefreshQueue  = createWhiskybaseRefreshQueue();
+  const wbRefreshWorker = createWhiskybaseRefreshWorker();
+  await scheduleWhiskybaseRefresh(wbRefreshQueue);
+
   console.log(`[worker-entry] worker ready — concurrency=${CONCURRENCY}`);
 
   // Graceful shutdown
@@ -53,6 +63,8 @@ async function main() {
     await worker.close();
     await alertWorker.close();
     await alertQueue.close();
+    await wbRefreshWorker.close();
+    await wbRefreshQueue.close();
     await queryClient.end();
     process.exit(0);
   };

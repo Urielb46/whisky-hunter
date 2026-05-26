@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch --env-file=.env src/index.ts",
     "test": "echo 'api tests in later phases' && exit 0",
     "lint": "echo 'no lint yet' && exit 0",
     "clean": "rm -rf dist .turbo"
@@ -19,6 +19,7 @@
     "zod": "4.4.2",
     "@whisky-hunter/database": "workspace:*",
     "@whisky-hunter/shared": "workspace:*",
+    "@whisky-hunter/search": "workspace:*",
     "drizzle-orm": "0.45.2",
     "postgres": "3.4.9",
     "better-auth": "1.3.0",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "tsx": "4.21.0",
-    "typescript": "5.7.3"
+    "typescript": "5.7.3",
+    "@types/node": "22.15.21"
   }
 }

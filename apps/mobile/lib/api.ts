@@ -19,6 +19,17 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+export interface BestPrice {
+  priceLocal: number;
+  currency: string;
+  retailerId: string | null;
+  retailerName: string | null;
+  retailerCountry: string | null;
+  inStock: boolean | null;
+  scrapedAt: string | null;
+  isStale: boolean;
+}
+
 export interface SearchResult {
   id: string;
   name: string;
@@ -26,9 +37,11 @@ export interface SearchResult {
   ageYears: number | null;
   volumeMl: number;
   category: string;
+  region: string | null;
+  abv: number | null;
   imageUrl: string | null;
-  bestPriceGbp: number | null;
-  retailerCount: number;
+  reviewScore: number | null;
+  bestPrice: BestPrice | null;
 }
 
 export async function searchWhisky(
@@ -52,6 +65,11 @@ export interface ProductDetail {
   caskType: string | null;
   imageUrl: string | null;
   description: string | null;
+  // Whiskybase catalog fields — WBASE-01–04
+  whiskybaseId: string | null;
+  whiskybaseUrl: string | null;
+  wbScore: number | null;
+  wbVoteCount: number;
   prices: Array<{
     retailerId: string;
     retailerName: string;
@@ -77,13 +95,24 @@ export interface CostBreakdown {
   total: number;
   currency: string;
   dutyDataAvailable: boolean;
+  restriction?: { restricted: boolean; warning?: string };
 }
 
-export async function getCostBreakdown(
-  retailerId: string,
-  productId: string,
-  destination: string,
-): Promise<CostBreakdown> {
-  const params = new URLSearchParams({ retailerId, productId, destination });
-  return apiFetch<CostBreakdown>(`/api/cost?${params}`);
+export async function getCostBreakdown(params: {
+  priceLocal: number;
+  currency: string;
+  retailerCountry: string;
+  destinationCountry: string;
+  volumeMl: number;
+  abv: number;
+}): Promise<CostBreakdown> {
+  const qs = new URLSearchParams({
+    priceLocal:         String(params.priceLocal),
+    currency:           params.currency,
+    retailerCountry:    params.retailerCountry,
+    destinationCountry: params.destinationCountry,
+    volumeMl:           String(params.volumeMl),
+    abv:                String(params.abv),
+  });
+  return apiFetch<CostBreakdown>(`/api/cost?${qs}`);
 }

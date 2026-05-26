@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>WhiskyHunter | Find Any Whisky, Pay the Right Price</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#D4A853",
+                        "primary-hover": "#E8C06A",
+                        "on-primary": "#111111",
+                        "background": "#0A0A0A",
+                        "surface": "#111111",
+                        "surface-elevated": "#1A1A1A",
+                        "surface-dim": "#0E0E0E",
+                        "surface-container": "#1F1B15",
+                        "border": "#242424",
+                        "outline": "#9b8f7e",
+                        "outline-variant": "#333333",
+                        "text": "#F0EDE8",
+                        "text-muted": "#9CA3AF",
+                        "text-subtle": "#6B7280",
+                        "on-surface": "#eae1d7",
+                        "on-surface-variant": "#d2c5b2",
+                        "cta-gradient-start": "#1a1008",
+                        "cta-gradient-end": "#0A0A0A"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "96px",
+                        "card-padding": "24px",
+                        "gutter": "20px",
+                        "container-padding": "24px",
+                        "base-unit": "8px",
+                        "container-max": "1280px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "display": ["Playfair Display", "serif"],
+                        "body": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-nav {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .shimmer-text {
+            background: linear-gradient(to right, #D4A853 20%, #ffdea6 40%, #ffdea6 60%, #D4A853 80%);
+            background-size: 200% auto;
+            color: #D4A853;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 5s linear infinite;
+        }
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+        .premium-card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .premium-card-hover:hover {
+            border-color: #D4A853;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px -10px rgba(212, 168, 83, 0.25);
+        }
+        .region-card-scrim {
+            background: linear-gradient(to top, rgba(10, 10, 10, 0.9) 0%, rgba(10, 10, 10, 0.2) 100%);
+            transition: all 0.5s ease;
+        }
+        .region-card:hover .region-card-scrim {
+            background: linear-gradient(to top, rgba(212, 168, 83, 0.4) 0%, rgba(10, 10, 10, 0.4) 100%);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0A0A0A;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #333333;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-text font-body custom-scrollbar selection:bg-primary selection:text-on-primary">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-background/60 glass-nav border-b border-white/5">
+<div class="flex justify-between items-center h-20 px-container-padding max-w-container-max mx-auto">
+<div class="flex items-center gap-10">
+<a class="font-display text-2xl font-bold text-primary tracking-tight flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">liquor</span>
+                    WHISKYHUNTER
+                </a>
+<div class="hidden md:flex gap-8">
+<a class="text-primary font-semibold border-b-2 border-primary pb-1 text-sm tracking-wide uppercase" href="#">Browse</a>
+<a class="text-text-muted font-medium hover:text-primary transition-colors duration-200 text-sm tracking-wide uppercase" href="#">Auctions</a>
+<a class="text-text-muted font-medium hover:text-primary transition-colors duration-200 text-sm tracking-wide uppercase" href="#">Distilleries</a>
+<a class="text-text-muted font-medium hover:text-primary transition-colors duration-200 text-sm tracking-wide uppercase" href="#">News</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="hidden lg:flex items-center gap-2 px-4 py-2 text-text-muted hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl">search</span>
+</button>
+<a class="text-text-muted font-medium hover:text-primary transition-colors text-sm uppercase tracking-wider" href="#">Sign In</a>
+<a class="bg-primary text-on-primary px-6 py-2.5 rounded font-bold hover:bg-primary-hover transition-all transform active:scale-95 text-sm uppercase tracking-wider" href="#">Register</a>
+</div>
+</div>
+</nav>
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-[90vh] flex items-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img alt="Highland landscape" class="w-full h-full object-cover scale-105" src="https://lh3.googleusercontent.com/aida/ADBb0uiXCJxlfJ5i8fq2oD67wTax2RppTTdcSRJ1XYXy_sVg5FhHsOt8dv7jCR91lWuODh6zzIOLJwJHErJW_uhThCmTDQg6Oo2jmLWLcZeyzHpHcCj_UKCXfUB_wijMglw2vBMx-lSqd6z6OkrLQlJ-vmqW_4dS4t0gxc8YLMCzdQGyzK9act0OyYtjRTJu1PgmBp65RKSDlt1Nq9uvDHQizTyWXf1z8T6oSuYspLPwzX_QAtjvRjCYkiPoTw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/20"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background/10"></div>
+</div>
+<div class="relative z-10 max-w-container-max mx-auto px-container-padding w-full py-20">
+<div class="max-w-4xl">
+<span class="font-semibold text-primary uppercase tracking-[0.3em] text-xs mb-6 block">The Authoritative Spirit Market Index</span>
+<h1 class="font-display text-6xl lg:text-8xl font-black mb-8 leading-[1.05] tracking-tight">
+<span class="block">Find any whisky.</span>
+<span class="shimmer-text block">Pay the right price.</span>
+</h1>
+<p class="font-body text-lg md:text-xl text-on-surface-variant/80 max-w-2xl mb-12 leading-relaxed">
+                        True all-in cost — shelf price, shipping, import duties, and currency conversion. Instantly compare trusted retailers globally with cinematic precision.
+                    </p>
+<div class="max-w-3xl relative group">
+<div class="flex items-center bg-white/5 backdrop-blur-xl rounded-lg p-1.5 border border-white/10 focus-within:border-primary/50 transition-all shadow-2xl">
+<span class="material-symbols-outlined ml-4 text-text-subtle">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-text w-full px-4 font-body text-base placeholder:text-text-subtle" placeholder="Search distillery, age, or region..." type="text"/>
+<button class="bg-primary text-on-primary px-10 py-3.5 rounded font-bold hover:bg-primary-hover transition-all whitespace-nowrap uppercase tracking-widest text-xs">
+                                Search Market
+                            </button>
+</div>
+</div>
+<div class="flex flex-wrap gap-4 mt-10">
+<span class="text-[10px] text-text-subtle font-bold uppercase tracking-widest self-center mr-2">Top Searches:</span>
+<button class="px-5 py-1.5 rounded border border-white/10 bg-white/5 hover:border-primary/50 hover:text-primary transition-all text-xs tracking-wide">Single Malt</button>
+<button class="px-5 py-1.5 rounded border border-white/10 bg-white/5 hover:border-primary/50 hover:text-primary transition-all text-xs tracking-wide">Islay Peat</button>
+<button class="px-5 py-1.5 rounded border border-white/10 bg-white/5 hover:border-primary/50 hover:text-primary transition-all text-xs tracking-wide">Japanese</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Bar -->
+<section class="border-y border-white/5 bg-surface-dim">
+<div class="max-w-container-max mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-white/5">
+<div class="py-10 px-container-padding text-center group">
+<div class="font-display text-4xl font-bold text-primary group-hover:scale-110 transition-transform">10+</div>
+<div class="text-[10px] text-text-subtle font-bold uppercase tracking-[0.2em] mt-3">Global Retailers</div>
+</div>
+<div class="py-10 px-container-padding text-center group">
+<div class="font-display text-4xl font-bold text-primary group-hover:scale-110 transition-transform">200k+</div>
+<div class="text-[10px] text-text-subtle font-bold uppercase tracking-[0.2em] mt-3">Bottles Tracked</div>
+</div>
+<div class="py-10 px-container-padding text-center group">
+<div class="font-display text-4xl font-bold text-primary group-hover:scale-110 transition-transform">Daily</div>
+<div class="text-[10px] text-text-subtle font-bold uppercase tracking-[0.2em] mt-3">Price Updates</div>
+</div>
+<div class="py-10 px-container-padding text-center group">
+<div class="font-display text-4xl font-bold text-primary group-hover:scale-110 transition-transform">40+</div>
+<div class="text-[10px] text-text-subtle font-bold uppercase tracking-[0.2em] mt-3">Shipping Zones</div>
+</div>
+</div>
+</section>
+<!-- Featured Whiskies -->
+<section class="py-section-gap max-w-container-max mx-auto px-container-padding">
+<div class="flex justify-between items-end mb-16">
+<div>
+<span class="font-bold text-primary uppercase tracking-[0.4em] text-[10px] mb-4 block">Market Picks</span>
+<h2 class="font-display text-5xl font-black text-on-surface">Trending Distillations</h2>
+</div>
+<a class="text-primary hover:text-primary-hover font-bold text-xs uppercase tracking-widest border-b border-primary/20 pb-2 transition-all" href="#">View Market Index</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Card 1 -->
+<div class="group bg-surface border border-border rounded-lg overflow-hidden premium-card-hover">
+<div class="aspect-[4/5] relative overflow-hidden bg-surface-dim flex items-center justify-center p-12">
+<img alt="Lagavulin 16" class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/ADBb0uhIJbeHyLbg4D3YIcYUepRne3-8gBajWS_k1z5yoT3dUr_hCKEuJDB0ZwMSv6LqE3Bny6PWdfzbvqxqRtPC3t9KETHBYSmEfCoFBYweNVBDcYvR5-BMpQeKLcc-LV7MaDOm8Cr6TXTmJ_T7SeAk575xdDgLxO_njC-TxI_wVSvjnjgjQ6btRwyrRjUJgFMdatxYjObBDHtn6kLJeGcot-BF6v--99Bbffu4w4_-oZ2DoRIJs_1_k7xnPg"/>
+<div class="absolute top-6 left-6">
+<span class="bg-black/80 backdrop-blur text-primary text-[9px] font-black px-3 py-1 rounded tracking-[0.2em] uppercase border border-primary/30">Islay</span>
+</div>
+</div>
+<div class="p-8 border-t border-white/5">
+<h3 class="font-display text-xl font-bold text-on-surface mb-3 group-hover:text-primary transition-colors">Lagavulin 16 Year Old</h3>
+<div class="flex justify-between items-baseline mb-8">
+<span class="font-display text-2xl font-bold text-primary">$85.00</span>
+<span class="text-text-subtle text-[10px] font-bold uppercase tracking-wider">Incl. Tax &amp; Duties</span>
+</div>
+<button class="w-full py-3.5 border border-primary/40 text-primary text-xs font-bold uppercase tracking-widest rounded hover:bg-primary hover:text-on-primary transition-all">View Price Data</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group bg-surface border border-border rounded-lg overflow-hidden premium-card-hover">
+<div class="aspect-[4/5] relative overflow-hidden bg-surface-dim flex items-center justify-center p-12">
+<img alt="Blanton's Original" class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/ADBb0uhIJbeHyLbg4D3YIcYUepRne3-8gBajWS_k1z5yoT3dUr_hCKEuJDB0ZwMSv6LqE3Bny6PWdfzbvqxqRtPC3t9KETHBYSmEfCoFBYweNVBDcYvR5-BMpQeKLcc-LV7MaDOm8Cr6TXTmJ_T7SeAk575xdDgLxO_njC-TxI_wVSvjnjgjQ6btRwyrRjUJgFMdatxYjObBDHtn6kLJeGcot-BF6v--99Bbffu4w4_-oZ2DoRIJs_1_k7xnPg"/>
+<div class="absolute top-6 left-6">
+<span class="bg-black/80 backdrop-blur text-primary text-[9px] font-black px-3 py-1 rounded tracking-[0.2em] uppercase border border-primary/30">Kentucky</span>
+</div>
+</div>
+<div class="p-8 border-t border-white/5">
+<h3 class="font-display text-xl font-bold text-on-surface mb-3 group-hover:text-primary transition-colors">Blanton's Original Single Barrel</h3>
+<div class="flex justify-between items-baseline mb-8">
+<span class="font-display text-2xl font-bold text-primary">$120.00</span>
+<span class="text-text-subtle text-[10px] font-bold uppercase tracking-wider">Incl. Tax &amp; Duties</span>
+</div>
+<button class="w-full py-3.5 border border-primary/40 text-primary text-xs font-bold uppercase tracking-widest rounded hover:bg-primary hover:text-on-primary transition-all">View Price Data</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group bg-surface border border-border rounded-lg overflow-hidden premium-card-hover">
+<div class="aspect-[4/5] relative overflow-hidden bg-surface-dim flex items-center justify-center p-12">
+<img alt="Yamazaki 12" class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/ADBb0uhIJbeHyLbg4D3YIcYUepRne3-8gBajWS_k1z5yoT3dUr_hCKEuJDB0ZwMSv6LqE3Bny6PWdfzbvqxqRtPC3t9KETHBYSmEfCoFBYweNVBDcYvR5-BMpQeKLcc-LV7MaDOm8Cr6TXTmJ_T7SeAk575xdDgLxO_njC-TxI_wVSvjnjgjQ6btRwyrRjUJgFMdatxYjObBDHtn6kLJeGcot-BF6v--99Bbffu4w4_-oZ2DoRIJs_1_k7xnPg"/>
+<div class="absolute top-6 left-6">
+<span class="bg-black/80 backdrop-blur text-primary text-[9px] font-black px-3 py-1 rounded tracking-[0.2em] uppercase border border-primary/30">Japan</span>
+</div>
+</div>
+<div class="p-8 border-t border-white/5">
+<h3 class="font-display text-xl font-bold text-on-surface mb-3 group-hover:text-primary transition-colors">Yamazaki 12 Year Old</h3>
+<div class="flex justify-between items-baseline mb-8">
+<span class="font-display text-2xl font-bold text-primary">$185.00</span>
+<span class="text-text-subtle text-[10px] font-bold uppercase tracking-wider">Incl. Tax &amp; Duties</span>
+</div>
+<button class="w-full py-3.5 border border-primary/40 text-primary text-xs font-bold uppercase tracking-widest rounded hover:bg-primary hover:text-on-primary transition-all">View Price Data</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group bg-surface border border-border rounded-lg overflow-hidden premium-card-hover">
+<div class="aspect-[4/5] relative overflow-hidden bg-surface-dim flex items-center justify-center p-12">
+<img alt="Macallan 18" class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/ADBb0uhIJbeHyLbg4D3YIcYUepRne3-8gBajWS_k1z5yoT3dUr_hCKEuJDB0ZwMSv6LqE3Bny6PWdfzbvqxqRtPC3t9KETHBYSmEfCoFBYweNVBDcYvR5-BMpQeKLcc-LV7MaDOm8Cr6TXTmJ_T7SeAk575xdDgLxO_njC-TxI_wVSvjnjgjQ6btRwyrRjUJgFMdatxYjObBDHtn6kLJeGcot-BF6v--99Bbffu4w4_-oZ2DoRIJs_1_k7xnPg"/>
+<div class="absolute top-6 left-6">
+<span class="bg-black/80 backdrop-blur text-primary text-[9px] font-black px-3 py-1 rounded tracking-[0.2em] uppercase border border-primary/30">Speyside</span>
+</div>
+</div>
+<div class="p-8 border-t border-white/5">
+<h3 class="font-display text-xl font-bold text-on-surface mb-3 group-hover:text-primary transition-colors">Macallan 18 Double Cask</h3>
+<div class="flex justify-between items-baseline mb-8">
+<span class="font-display text-2xl font-bold text-primary">$420.00</span>
+<span class="text-text-subtle text-[10px] font-bold uppercase tracking-wider">Incl. Tax &amp; Duties</span>
+</div>
+<button class="w-full py-3.5 border border-primary/40 text-primary text-xs font-bold uppercase tracking-widest rounded hover:bg-primary hover:text-on-primary transition-all">View Price Data</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Browse by Region -->
+<section class="py-section-gap bg-surface-dim border-y border-white/5">
+<div class="max-w-container-max mx-auto px-container-padding">
+<div class="text-center mb-20">
+<span class="font-bold text-primary uppercase tracking-[0.5em] text-[10px] mb-4 block">Regional Excellence</span>
+<h2 class="font-display text-5xl font-black text-on-surface mb-6">Terroir of Scotland</h2>
+<p class="font-body text-text-muted max-w-2xl mx-auto leading-relaxed">Explore the diverse flavor profiles defined by the rugged landscapes and historic distillation techniques of the traditional whisky regions.</p>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-6 gap-5">
+<!-- Regions -->
+<a class="group region-card relative aspect-[3/4] rounded overflow-hidden border border-white/10" href="#">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjK-d86Jd-q5p-YxkSCY5MNJYy22gpV2x0IJS9eLKYJE-ODLnG98e8P9vPPs9IbQ5l5J8mdSw0m7llVU0kpR7daSkHgimN3HS465n-hsXcmScIWyntb1iRJ59mco0FAw67V7Id6pS2KGSVUtBAVvaOyDRAr4DqMI7A_fduAjO1cx7eutRkDFRo2dDRfTMobQqBpcgYDgLnJW6MPBouA83UY4I_Cs_-fOJ-QMOSKW3sLRzEJQi7HU8-AhbCFogW8PsOvDZGOv800F0"/>
+<div class="absolute inset-0 region-card-scrim z-10"></div>
+<div class="absolute inset-0 flex flex-col justify-end p-6 z-20">
+<h4 class="font-display text-xl font-bold text-on-surface group-hover:text-primary transition-colors">Speyside</h4>
+<p class="text-[9px] text-primary uppercase font-black tracking-widest mt-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">Elegant &amp; Fruity</p>
+</div>
+</a>
+<a class="group region-card relative aspect-[3/4] rounded overflow-hidden border border-white/10" href="#">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjK-d86Jd-q5p-YxkSCY5MNJYy22gpV2x0IJS9eLKYJE-ODLnG98e8P9vPPs9IbQ5l5J8mdSw0m7llVU0kpR7daSkHgimN3HS465n-hsXcmScIWyntb1iRJ59mco0FAw67V7Id6pS2KGSVUtBAVvaOyDRAr4DqMI7A_fduAjO1cx7eutRkDFRo2dDRfTMobQqBpcgYDgLnJW6MPBouA83UY4I_Cs_-fOJ-QMOSKW3sLRzEJQi7HU8-AhbCFogW8PsOvDZGOv800F0"/>
+<div class="absolute inset-0 region-card-scrim z-10"></div>
+<div class="absolute inset-0 flex flex-col justify-end p-6 z-20">
+<h4 class="font-display text-xl font-bold text-on-surface group-hover:text-primary transition-colors">Islay</h4>
+<p class="text-[9px] text-primary uppercase font-black tracking-widest mt-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">Peaty &amp; Maritime</p>
+</div>
+</a>
+<a class="group region-card relative aspect-[3/4] rounded overflow-hidden border border-white/10" href="#">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjK-d86Jd-q5p-YxkSCY5MNJYy22gpV2x0IJS9eLKYJE-ODLnG98e8P9vPPs9IbQ5l5J8mdSw0m7llVU0kpR7daSkHgimN3HS465n-hsXcmScIWyntb1iRJ59mco0FAw67V7Id6pS2KGSVUtBAVvaOyDRAr4DqMI7A_fduAjO1cx7eutRkDFRo2dDRfTMobQqBpcgYDgLnJW6MPBouA83UY4I_Cs_-fOJ-QMOSKW3sLRzEJQi7HU8-AhbCFogW8PsOvDZGOv800F0"/>
+<div class="absolute inset-0 region-card-scrim z-10"></div>
+<div class="absolute inset-0 flex flex-col justify-end p-6 z-20">
+<h4 class="font-display text-xl font-bold text-on-surface group-hover:text-primary transition-colors">Highland</h4>
+<p class="text-[9px] text-primary uppercase font-black tracking-widest mt-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">Rich &amp; Textured</p>
+</div>
+</a>
+<a class="group region-card relative aspect-[3/4] rounded overflow-hidden border border-white/10" href="#">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjK-d86Jd-q5p-YxkSCY5MNJYy22gpV2x0IJS9eLKYJE-ODLnG98e8P9vPPs9IbQ5l5J8mdSw0m7llVU0kpR7daSkHgimN3HS465n-hsXcmScIWyntb1iRJ59mco0FAw67V7Id6pS2KGSVUtBAVvaOyDRAr4DqMI7A_fduAjO1cx7eutRkDFRo2dDRfTMobQqBpcgYDgLnJW6MPBouA83UY4I_Cs_-fOJ-QMOSKW3sLRzEJQi7HU8-AhbCFogW8PsOvDZGOv800F0"/>
+<div class="absolute inset-0 region-card-scrim z-10"></div>
+<div class="absolute inset-0 flex flex-col justify-end p-6 z-20">
+<h4 class="font-display text-xl font-bold text-on-surface group-hover:text-primary transition-colors">Lowland</h4>
+<p class="text-[9px] text-primary uppercase font-black tracking-widest mt-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">Light &amp; Floral</p>
+</div>
+</a>
+<a class="group region-card relative aspect-[3/4] rounded overflow-hidden border border-white/10" href="#">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjK-d86Jd-q5p-YxkSCY5MNJYy22gpV2x0IJS9eLKYJE-ODLnG98e8P9vPPs9IbQ5l5J8mdSw0m7llVU0kpR7daSkHgimN3HS465n-hsXcmScIWyntb1iRJ59mco0FAw67V7Id6pS2KGSVUtBAVvaOyDRAr4DqMI7A_fduAjO1cx7eutRkDFRo2dDRfTMobQqBpcgYDgLnJW6MPBouA83UY4I_Cs_-fOJ-QMOSKW3sLRzEJQi7HU8-AhbCFogW8PsOvDZGOv800F0"/>
+<div class="absolute inset-0 region-card-scrim z-10"></div>
+<div class="absolute inset-0 flex flex-col justify-end p-6 z-20">
+<h4 class="font-display text-xl font-bold text-on-surface group-hover:text-primary transition-colors">Campbeltown</h4>
+<p class="text-[9px] text-primary uppercase font-black tracking-widest mt-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">Salt &amp; Brine</p>
+</div>
+</a>
+<a class="group region-card relative aspect-[3/4] rounded overflow-hidden border border-white/10" href="#">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjK-d86Jd-q5p-YxkSCY5MNJYy22gpV2x0IJS9eLKYJE-ODLnG98e8P9vPPs9IbQ5l5J8mdSw0m7llVU0kpR7daSkHgimN3HS465n-hsXcmScIWyntb1iRJ59mco0FAw67V7Id6pS2KGSVUtBAVvaOyDRAr4DqMI7A_fduAjO1cx7eutRkDFRo2dDRfTMobQqBpcgYDgLnJW6MPBouA83UY4I_Cs_-fOJ-QMOSKW3sLRzEJQi7HU8-AhbCFogW8PsOvDZGOv800F0"/>
+<div class="absolute inset-0 region-card-scrim z-10"></div>
+<div class="absolute inset-0 flex flex-col justify-end p-6 z-20">
+<h4 class="font-display text-xl font-bold text-on-surface group-hover:text-primary transition-colors">Islands</h4>
+<p class="text-[9px] text-primary uppercase font-black tracking-widest mt-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">Wild &amp; Peat</p>
+</div>
+</a>
+</div>
+</div>
+</section>
+<!-- How It Works -->
+<section class="py-section-gap max-w-container-max mx-auto px-container-padding">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<div class="relative group p-10 border border-white/5 rounded-xl bg-surface transition-all hover:bg-surface-elevated">
+<div class="font-display text-[140px] text-primary/5 absolute -top-14 left-4 select-none group-hover:text-primary/10 transition-colors font-black">1</div>
+<div class="relative z-10">
+<span class="material-symbols-outlined text-4xl text-primary mb-8 block">search</span>
+<h4 class="font-display text-3xl font-bold text-on-surface mb-5">Search</h4>
+<p class="text-text-muted font-body leading-relaxed text-sm">Access our comprehensive database of over 200,000 unique bottlings and historic releases from around the globe.</p>
+</div>
+</div>
+<div class="relative group p-10 border border-white/5 rounded-xl bg-surface transition-all hover:bg-surface-elevated">
+<div class="font-display text-[140px] text-primary/5 absolute -top-14 left-4 select-none group-hover:text-primary/10 transition-colors font-black">2</div>
+<div class="relative z-10">
+<span class="material-symbols-outlined text-4xl text-primary mb-8 block">balance</span>
+<h4 class="font-display text-3xl font-bold text-on-surface mb-5">Compare</h4>
+<p class="text-text-muted font-body leading-relaxed text-sm">Our engine calculates real-time shipping costs, import duties, and taxes to provide the true total price for your location.</p>
+</div>
+</div>
+<div class="relative group p-10 border border-white/5 rounded-xl bg-surface transition-all hover:bg-surface-elevated">
+<div class="font-display text-[140px] text-primary/5 absolute -top-14 left-4 select-none group-hover:text-primary/10 transition-colors font-black">3</div>
+<div class="relative z-10">
+<span class="material-symbols-outlined text-4xl text-primary mb-8 block">shopping_bag</span>
+<h4 class="font-display text-3xl font-bold text-on-surface mb-5">Acquire</h4>
+<p class="text-text-muted font-body leading-relaxed text-sm">Direct links to verified global retailers ensure a safe and authenticated acquisition process for every single bottle.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Banner -->
+<section class="py-section-gap px-container-padding">
+<div class="max-w-container-max mx-auto bg-gradient-to-br from-[#1a1008] to-[#0A0A0A] rounded-2xl p-20 relative overflow-hidden border border-primary/20 text-center">
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,168,83,0.15)_0%,transparent_70%)]"></div>
+<div class="relative z-10">
+<span class="font-bold text-primary uppercase tracking-[0.5em] text-[10px] mb-8 block">Member Access</span>
+<h2 class="font-display text-5xl lg:text-7xl font-black text-white mb-10 leading-tight">Ready to find your <br/>next masterpiece?</h2>
+<div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
+<button class="bg-primary text-on-primary px-12 py-5 rounded font-bold hover:bg-primary-hover transition-all text-sm uppercase tracking-[0.2em] shadow-2xl shadow-primary/20">
+                            Start Exploring
+                        </button>
+<button class="px-12 py-5 rounded font-bold border border-primary/30 text-primary hover:bg-primary/5 transition-all text-sm uppercase tracking-[0.2em]">
+                            Create Account
+                        </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-black border-t border-white/5 pt-24 pb-12">
+<div class="max-w-container-max mx-auto px-container-padding">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-24">
+<div class="md:col-span-1">
+<div class="font-display text-xl font-bold text-primary uppercase tracking-[0.3em] mb-10">WhiskyHunter</div>
+<p class="text-text-muted text-sm font-body leading-relaxed max-w-xs">The authoritative independent market tracker and price comparison engine for fine spirits collectors worldwide.</p>
+</div>
+<div>
+<h5 class="text-[10px] font-black text-on-surface uppercase tracking-[0.3em] mb-10">Market Data</h5>
+<ul class="space-y-5">
+<li><a class="text-text-subtle hover:text-primary transition-colors duration-200 text-xs font-semibold uppercase tracking-wider" href="#">Market Insights</a></li>
+<li><a class="text-text-subtle hover:text-primary transition-colors duration-200 text-xs font-semibold uppercase tracking-wider" href="#">Price Tracker</a></li>
+<li><a class="text-text-subtle hover:text-primary transition-colors duration-200 text-xs font-semibold uppercase tracking-wider" href="#">Collector Guides</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-[10px] font-black text-on-surface uppercase tracking-[0.3em] mb-10">Company</h5>
+<ul class="space-y-5">
+<li><a class="text-text-subtle hover:text-primary transition-colors duration-200 text-xs font-semibold uppercase tracking-wider" href="#">About WhiskyHunter</a></li>
+<li><a class="text-text-subtle hover:text-primary transition-colors duration-200 text-xs font-semibold uppercase tracking-wider" href="#">Privacy Policy</a></li>
+<li><a class="text-text-subtle hover:text-primary transition-colors duration-200 text-xs font-semibold uppercase tracking-wider" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-[10px] font-black text-on-surface uppercase tracking-[0.3em] mb-10">Newsletter</h5>
+<p class="text-text-subtle text-xs font-medium mb-6">Stay updated with rare bottle drops.</p>
+<div class="flex border-b border-white/10 focus-within:border-primary transition-all pb-2">
+<input class="bg-transparent border-none focus:ring-0 text-text w-full py-2 text-xs placeholder:text-text-subtle" placeholder="Email address" type="email"/>
+<button class="text-primary hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined text-xl">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<div class="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+<p class="text-text-subtle text-[10px] font-bold uppercase tracking-widest">© 2024 WhiskyHunter Index. All Rights Reserved.</p>
+<p class="text-text-subtle/50 text-[10px] font-medium italic">Enjoy Responsibly. Excessive drinking is hazardous to your health.</p>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interactions for header
+        window.onscroll = function() {
+            const nav = document.querySelector('nav');
+            if (window.pageYOffset > 50) {
+                nav.classList.add('bg-background/95');
+                nav.classList.remove('bg-background/60');
+            } else {
+                nav.classList.add('bg-background/60');
+                nav.classList.remove('bg-background/95');
+            }
+        };
+    </script>
+</body></html>

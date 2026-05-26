@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  Linking,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
@@ -22,11 +23,13 @@ const DESTINATIONS = [
   { code: 'DE', label: '🇩🇪 Germany' },
   { code: 'FR', label: '🇫🇷 France' },
   { code: 'CA', label: '🇨🇦 Canada' },
+  { code: 'AU', label: '🇦🇺 Australia' },
+  { code: 'JP', label: '🇯🇵 Japan' },
 ];
 
 export default function ProductScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [selectedRetailer, setSelectedRetailer] = useState<string | null>(null);
+  const [selectedRetailerId, setSelectedRetailerId] = useState<string | null>(null);
   const [destination, setDestination] = useState('GB');
 
   const { data: product, isFetching, error } = useQuery({
@@ -35,11 +38,21 @@ export default function ProductScreen() {
     enabled: !!id,
   });
 
+  // Find the full price entry for the selected retailer
+  const selectedPrice = product?.prices.find((p) => p.retailerId === selectedRetailerId) ?? null;
+
   const { data: costData, isFetching: costFetching } = useQuery({
-    queryKey: ['cost', selectedRetailer, product?.id, destination],
+    queryKey: ['cost', selectedRetailerId, destination, product?.volumeMl, product?.abv],
     queryFn: () =>
-      getCostBreakdown(selectedRetailer!, product!.id, destination),
-    enabled: !!selectedRetailer && !!product,
+      getCostBreakdown({
+        priceLocal:         selectedPrice!.priceLocal,
+        currency:           selectedPrice!.currency,
+        retailerCountry:    selectedPrice!.country,
+        destinationCountry: destination,
+        volumeMl:           product!.volumeMl,
+        abv:                product!.abv ?? 40,
+      }),
+    enabled: !!selectedPrice && !!product,
   });
 
   if (isFetching) {
@@ -78,6 +91,30 @@ export default function ProductScreen() {
         {product.description ? (
           <Text style={styles.description} numberOfLines={4}>{product.description}</Text>
         ) : null}
+
+        {/* Whiskybase community rating — WBASE-02 / WBASE-04 */}
+        {product.wbScore != null && (
+          <View style={styles.wbCard}>
+            <View style={styles.wbScoreBadge}>
+              <Text style={styles.wbScoreText}>{product.wbScore.toFixed(0)}</Text>
+            </View>
+            <View style={styles.wbInfo}>
+              <Text style={styles.wbLabel}>Community Rating</Text>
+              <Text style={styles.wbVotes}>{product.wbVoteCount.toLocaleString()} ratings</Text>
+            </View>
+            {product.whiskybaseUrl ? (
+              <TouchableOpacity
+                style={styles.wbLink}
+                onPress={() => Linking.openURL(product.whiskybaseUrl!)}
+              >
+                <Text style={styles.wbLinkText}>View →</Text>
+              </TouchableOpacity>
+            ) : null}
+          </View>
+        )}
+        {product.wbScore != null && (
+          <Text style={styles.wbAttribution}>Ratings powered by Whiskybase</Text>
+        )}
       </View>
 
       {/* Destination selector */}
@@ -109,10 +146,10 @@ export default function ProductScreen() {
               key={p.retailerId}
               style={[
                 styles.priceRow,
-                selectedRetailer === p.retailerId && styles.priceRowSelected,
+                selectedRetailerId === p.retailerId && styles.priceRowSelected,
                 !p.inStock && styles.priceRowOOS,
               ]}
-              onPress={() => setSelectedRetailer(p.retailerId)}
+              onPress={() => setSelectedRetailerId(p.retailerId)}
             >
               <View style={styles.priceRowLeft}>
                 <Text style={styles.retailerName}>{p.retailerName}</Text>
@@ -122,7 +159,7 @@ export default function ProductScreen() {
                 <Text style={[styles.priceValue, !p.inStock && styles.oos]}>
                   {p.inStock ? `${p.currency} ${p.priceLocal.toFixed(2)}` : 'Out of stock'}
                 </Text>
-                {selectedRetailer === p.retailerId && (
+                {selectedRetailerId === p.retailerId && (
                   <Text style={styles.selectHint}>tap for breakdown ↓</Text>
                 )}
               </View>
@@ -132,7 +169,7 @@ export default function ProductScreen() {
       </View>
 
       {/* Cost breakdown */}
-      {selectedRetailer && (
+      {selectedRetailerId && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>True cost to {destination}</Text>
           {costFetching ? (
@@ -240,4 +277,14 @@ const styles = StyleSheet.create({
   oos:             { color: '#666' },
   selectHint:      { color: '#666', fontSize: 10, marginTop: 2 },
   noPrices:        { color: '#666', fontSize: 14 },
+  // Whiskybase rating card — WBASE-04
+  wbCard:          { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1a1a2e', borderRadius: 10, padding: 12, marginTop: 12, borderWidth: 1, borderColor: 'rgba(184,134,11,0.25)' },
+  wbScoreBadge:    { width: 44, height: 44, borderRadius: 8, backgroundColor: 'rgba(184,134,11,0.15)', alignItems: 'center', justifyContent: 'center', marginRight: 10, borderWidth: 1, borderColor: 'rgba(184,134,11,0.35)' },
+  wbScoreText:     { color: '#b8860b', fontSize: 16, fontWeight: '700' },
+  wbInfo:          { flex: 1 },
+  wbLabel:         { color: '#fff', fontSize: 13, fontWeight: '600' },
+  wbVotes:         { color: '#666', fontSize: 11, marginTop: 1 },
+  wbLink:          { backgroundColor: 'rgba(184,134,11,0.12)', borderRadius: 6, paddingHorizontal: 10, paddingVertical: 5, borderWidth: 1, borderColor: 'rgba(184,134,11,0.35)' },
+  wbLinkText:      { color: '#b8860b', fontSize: 12, fontWeight: '600' },
+  wbAttribution:   { color: '#444', fontSize: 10, marginTop: 4 },
 });

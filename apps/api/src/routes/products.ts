@@ -9,8 +9,11 @@ const productsRoute = new Hono();
  * GET /products/:id
  * Returns canonical product details + all current retailer prices.
  */
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 productsRoute.get('/:id', async (c) => {
   const id = c.req.param('id');
+  if (!UUID_RE.test(id)) return c.json({ error: 'Product not found' }, 404);
 
   const [product] = await db
     .select()
@@ -64,6 +67,11 @@ productsRoute.get('/:id', async (c) => {
     imageUrl: product.imageUrl,
     description: product.description,
     lwinCode: product.lwinCode,
+    // Whiskybase catalog fields — WBASE-01 / WBASE-02 / WBASE-03 / WBASE-04
+    whiskybaseId: product.whiskybaseId ?? null,
+    whiskybaseUrl: product.whiskybaseUrl ?? null,
+    wbScore: product.wbScore ? parseFloat(product.wbScore) : null,
+    wbVoteCount: product.wbVoteCount ?? 0,
     prices: prices.map((p) => ({
       retailerId: p.retailer_id,
       retailerName: p.retailer_name,

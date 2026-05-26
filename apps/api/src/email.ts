@@ -4,7 +4,9 @@
  */
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env['RESEND_API_KEY'] ?? '');
+const apiKey = process.env['RESEND_API_KEY'];
+// Lazy init — no key in dev means emails are skipped silently
+let resend: Resend | null = apiKey ? new Resend(apiKey) : null;
 
 const FROM =
   process.env['RESEND_FROM'] ?? 'WhiskyHunter <onboarding@resend.dev>';
@@ -20,6 +22,7 @@ export async function sendVerificationEmail(
   email: string,
   url: string,
 ): Promise<void> {
+  if (!resend) { console.log('[email] RESEND_API_KEY not set — skipping verification email'); return; }
   const { error } = await resend.emails.send({
     from: FROM,
     to: email,
@@ -54,6 +57,7 @@ export async function sendPasswordReset(
   email: string,
   url: string,
 ): Promise<void> {
+  if (!resend) { console.log('[email] RESEND_API_KEY not set — skipping password reset email'); return; }
   const { error } = await resend.emails.send({
     from: FROM,
     to: email,
@@ -97,6 +101,7 @@ export async function sendPriceAlertEmail(
   const target  = (opts.targetPriceGbp  / 100).toFixed(2);
   const url     = `${APP_URL}/products/${opts.productId}`;
 
+  if (!resend) return;
   const { error } = await resend.emails.send({
     from: FROM,
     to: email,

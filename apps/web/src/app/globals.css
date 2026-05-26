@@ -1,1 +1,275 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
+
 @import "tailwindcss";
+
+:root {
+  --bg: #0A0A0A;
+  --surface: #111111;
+  --surface-elevated: #1A1A1A;
+  --border: #242424;
+  --border-hover: #3A3A3A;
+  --primary: #D4A853;
+  --primary-hover: #E8C06A;
+  --primary-muted: rgba(212, 168, 83, 0.12);
+  --text: #F0EDE8;
+  --text-muted: #6B7280;
+  --text-subtle: #9CA3AF;
+  --red: #EF4444;
+  --green: #22C55E;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+h1, h2, h3, .font-display {
+  font-family: "Playfair Display", Georgia, serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-hover);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Focus ring */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Custom selection */
+::selection {
+  background: rgba(212, 168, 83, 0.25);
+  color: var(--text);
+}
+
+/* Amber gradient text utility */
+.text-gold {
+  background: linear-gradient(135deg, #D4A853 0%, #F0C97A 50%, #D4A853 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gold-shimmer 4s ease-in-out infinite;
+}
+
+@keyframes gold-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Card base */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+.card:hover {
+  border-color: rgba(212, 168, 83, 0.45);
+  box-shadow: 0 0 0 1px rgba(212, 168, 83, 0.08), 0 8px 32px rgba(0, 0, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Product card hover */
+.product-card {
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+.product-card:hover {
+  border-color: rgba(212, 168, 83, 0.5) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(212, 168, 83, 0.1);
+  transform: translateY(-3px);
+}
+
+/* Shimmer skeleton */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-elevated) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius);
+}
+
+/* Float animation — decorative elements */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-12px) rotate(2deg); }
+  66% { transform: translateY(-6px) rotate(-1deg); }
+}
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+  50% { transform: translateY(-18px) rotate(3deg) scale(1.02); }
+}
+
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-float-slow { animation: float-slow 9s ease-in-out infinite; }
+.animate-float-delay { animation: float 7s ease-in-out 2s infinite; }
+
+/* Glow pulse — hero radial */
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.08); }
+}
+.animate-glow { animation: glow-pulse 5s ease-in-out infinite; }
+
+/* Fade-in-up — page entrance */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
+.animate-fade-in-up-1 { animation: fade-in-up 0.6s 0.1s ease-out both; }
+.animate-fade-in-up-2 { animation: fade-in-up 0.6s 0.2s ease-out both; }
+.animate-fade-in-up-3 { animation: fade-in-up 0.6s 0.3s ease-out both; }
+.animate-fade-in-up-4 { animation: fade-in-up 0.6s 0.4s ease-out both; }
+
+/* Region card hover */
+.region-card {
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.region-card:hover {
+  border-color: rgba(212, 168, 83, 0.5) !important;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Step card */
+.step-card {
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.step-card:hover {
+  border-color: rgba(212, 168, 83, 0.35) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Quick search pill */
+.quick-pill {
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
+}
+.quick-pill:hover {
+  background: var(--primary-muted) !important;
+  border-color: rgba(212, 168, 83, 0.4) !important;
+  color: var(--primary) !important;
+  transform: translateY(-1px);
+}
+
+/* Product image hero */
+.product-img-hero {
+  transition: box-shadow 0.3s;
+}
+.product-img-hero:hover {
+  box-shadow: 0 0 0 1px rgba(212,168,83,0.2), 0 20px 60px rgba(0,0,0,0.6);
+}
+
+/* Filter sidebar card */
+.filter-card {
+  border-left: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+.filter-card:hover {
+  border-left-color: rgba(212,168,83,0.3);
+}
+
+/* Amber input focus glow */
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  outline: none;
+}
+
+/* Price table row hover */
+.price-row {
+  transition: background 0.15s, transform 0.15s;
+}
+.price-row:hover {
+  background: var(--surface-elevated) !important;
+  transform: translateX(2px);
+}
+
+/* Material Symbols base */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}
+
+/* Glass nav */
+.glass-nav {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Shimmer text — animated gold sweep */
+.shimmer-text {
+  background: linear-gradient(to right, #D4A853 20%, #ffdea6 40%, #ffdea6 60%, #D4A853 80%);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 5s linear infinite;
+}
+@keyframes shine {
+  to { background-position: 200% center; }
+}
+
+/* Premium card hover — stronger cubic-bezier lift */
+.premium-card-hover {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.premium-card-hover:hover {
+  border-color: rgba(212, 168, 83, 0.8) !important;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 40px -10px rgba(212, 168, 83, 0.25);
+}
+
+/* Region card scrim gradient */
+.region-card-scrim {
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.9) 0%, rgba(10, 10, 10, 0.2) 100%);
+  transition: background 0.5s ease;
+}
+.region-card:hover .region-card-scrim {
+  background: linear-gradient(to top, rgba(212, 168, 83, 0.45) 0%, rgba(10, 10, 10, 0.4) 100%);
+}
+
+/* Noise texture overlay for depth */
+.noise-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 0;
+}

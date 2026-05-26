@@ -13,6 +13,8 @@
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "worker": "tsx --env-file=../../.env src/worker-entry.ts",
     "scrape:test": "tsx src/cli/scrape-once.ts",
+    "scrape:whiskybase": "tsx --env-file=../../.env src/cli/whiskybase-seed.ts",
+    "scrape:whiskybase:dry": "tsx --env-file=../../.env src/cli/whiskybase-seed.ts --dry-run",
     "lint": "echo 'no lint yet' && exit 0",
     "clean": "rm -rf dist .turbo"
   },

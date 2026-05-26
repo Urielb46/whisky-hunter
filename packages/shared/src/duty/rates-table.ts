@@ -5,6 +5,8 @@
  *  - EU (DE example): 13.03€/LPA + 19% VAT
  *  - US: $13.50/proof-gallon federal excise + state varies (avg ~5%)
  *  - CA: ~$11.696/LPA federal + provincial (avg 10%)
+ *  - AU: ATO A$103.81/LPA (2024-25 indexed rate) + 10% GST
+ *  - JP: ¥370/LPA spirits excise + 10% consumption tax + 3% import duty
  *
  * All rates in the RETAILER currency per litre of pure alcohol (LPA).
  * Updated: Q2 2025 — verify before production use.
@@ -58,6 +60,20 @@ export const DUTY_RATES: DutyRate[] = [
     exciseCurrency: 'CAD',
     vatRate: 0.13, // HST Ontario (varies by province)
     importDutyRate: 0,
+  },
+  {
+    country: 'AU',
+    excisePerLpa: 103.81, // ATO indexed rate 2024-25 (A$/LPA)
+    exciseCurrency: 'AUD',
+    vatRate: 0.10,        // GST
+    importDutyRate: 0.05, // MFN import duty for spirits ~5%
+  },
+  {
+    country: 'JP',
+    excisePerLpa: 370,    // ¥370/LPA spirits category (Liquor Tax Act)
+    exciseCurrency: 'JPY',
+    vatRate: 0.10,        // consumption tax
+    importDutyRate: 0.03, // MFN import duty for whisky ~3%
   },
 ];
 
