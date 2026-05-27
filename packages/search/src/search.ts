@@ -8,7 +8,8 @@
  *  - facets      → returned for sidebar population
  */
 
-import type Typesense from 'typesense';
+import type { Client as TypesenseClient } from 'typesense';
+import type { SearchResultHit } from 'typesense/lib/Typesense/Documents.js';
 import { COLLECTION_NAME } from './collection.js';
 import type { SearchParams, SearchResponse, WhiskyDocument } from './types.js';
 
@@ -20,7 +21,7 @@ const DEFAULT_SORT: Record<NonNullable<SearchParams['sort']>, string> = {
 };
 
 export async function searchWhiskies(
-  client: Typesense.Client,
+  client: TypesenseClient,
   params: SearchParams,
 ): Promise<SearchResponse> {
   const {
@@ -107,7 +108,7 @@ export async function searchWhiskies(
 
   const total = result.found;
 
-  const results = (result.hits ?? []).map((hit) => {
+  const results = (result.hits ?? []).map((hit: SearchResultHit<WhiskyDocument>) => {
     const doc = hit.document;
     return {
       id:          doc.id,

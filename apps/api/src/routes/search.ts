@@ -198,7 +198,7 @@ async function sqlSearch(c: Context<any>, params: ValidatedParams) {
     `),
   ]);
 
-  const total = countRows.length > 0 ? parseInt(countRows[0].cnt, 10) : 0;
+  const total = countRows[0] ? parseInt(countRows[0].cnt, 10) : 0;
 
   const results = rows.map((r) => ({
     id:          r.id,

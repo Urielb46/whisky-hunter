@@ -13,7 +13,7 @@
  *  - `in_stock`         — bool for "in stock only" filter
  */
 
-import type Typesense from 'typesense';
+import type { Client as TypesenseClient } from 'typesense';
 import type { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections.js';
 
 export const COLLECTION_NAME = 'whiskies';
@@ -76,7 +76,7 @@ export const COLLECTION_SCHEMA: CollectionCreateSchema = {
  * Safe to call on every startup.
  */
 export async function ensureCollection(
-  client: Typesense.Client,
+  client: TypesenseClient,
 ): Promise<void> {
   try {
     await client.collections(COLLECTION_NAME).retrieve();
@@ -94,7 +94,7 @@ export async function ensureCollection(
  * Use carefully — erases all indexed data.
  */
 export async function resetCollection(
-  client: Typesense.Client,
+  client: TypesenseClient,
 ): Promise<void> {
   try {
     await client.collections(COLLECTION_NAME).delete();
