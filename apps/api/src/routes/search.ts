@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import type { Context } from 'hono';
 import { db } from '@whisky-hunter/database';
 import { sql } from 'drizzle-orm';
 import { z } from 'zod';
@@ -94,9 +95,9 @@ search.get('/', zValidator('query', SearchQuerySchema), async (c) => {
 // ---------------------------------------------------------------------------
 
 type ValidatedParams = z.infer<typeof SearchQuerySchema>;
-type RouteContext = Parameters<Parameters<(typeof search)['get']>[1]>[0];
 
-async function sqlSearch(c: RouteContext, params: ValidatedParams) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function sqlSearch(c: Context<any>, params: ValidatedParams) {
   const {
     q, distillery, region, caskType, category,
     ageMin, ageMax, abvMin, abvMax,

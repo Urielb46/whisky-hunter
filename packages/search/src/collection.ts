@@ -14,7 +14,7 @@
  */
 
 import type Typesense from 'typesense';
-import type { CollectionCreateSchema } from 'typesense/lib/Typesense/Collection.js';
+import type { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections.js';
 
 export const COLLECTION_NAME = 'whiskies';
 
