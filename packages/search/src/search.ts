@@ -9,7 +9,6 @@
  */
 
 import type { Client as TypesenseClient } from 'typesense';
-import type { SearchResultHit } from 'typesense/lib/Typesense/Documents.js';
 import { COLLECTION_NAME } from './collection.js';
 import type { SearchParams, SearchResponse, WhiskyDocument } from './types.js';
 
@@ -108,25 +107,29 @@ export async function searchWhiskies(
 
   const total = result.found;
 
-  const results = (result.hits ?? []).map((hit: SearchResultHit<WhiskyDocument>) => {
+  const results = (result.hits ?? []).map((hit: { document: WhiskyDocument }) => {
     const doc = hit.document;
     return {
-      id:          doc.id,
-      name:        doc.name,
-      distillery:  doc.distillery,
-      ageYears:    doc.age_years ?? null,
-      volumeMl:    doc.volume_ml,
-      category:    doc.category,
-      region:      doc.region ?? null,
-      abv:         doc.abv ?? null,
-      imageUrl:    doc.image_url ?? null,
-      reviewScore: doc.review_score ?? null,
+      id:            doc.id,
+      name:          doc.name,
+      distillery:    doc.distillery,
+      ageYears:      doc.age_years ?? null,
+      volumeMl:      doc.volume_ml,
+      category:      doc.category,
+      region:        doc.region ?? null,
+      abv:           doc.abv ?? null,
+      imageUrl:      doc.image_url ?? null,
+      reviewScore:   doc.review_score ?? null,
+      whiskybaseId:  doc.whiskybase_id ?? null,
+      wbScore:       doc.wb_score ?? null,
+      wbVoteCount:   doc.wb_vote_count ?? 0,
+      whiskybaseUrl: doc.whiskybase_url ?? null,
       bestPrice: doc.best_price_gbp !== undefined && doc.best_currency
         ? {
-            priceLocal:  doc.best_price_local ?? doc.best_price_gbp,
-            currency:    doc.best_currency,
+            priceLocal:   doc.best_price_local ?? doc.best_price_gbp,
+            currency:     doc.best_currency,
             retailerName: (doc.retailer_names ?? [])[0] ?? '',
-            inStock:     doc.in_stock,
+            inStock:      doc.in_stock,
           }
         : null,
     };
