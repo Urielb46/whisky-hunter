@@ -1,5 +1,6 @@
 {
   "framework": "nextjs",
+  "installCommand": "pnpm install --no-frozen-lockfile",
   "buildCommand": "pnpm --filter @whisky-hunter/web build",
   "outputDirectory": ".next",
   "env": {
