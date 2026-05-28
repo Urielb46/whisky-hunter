@@ -1,0 +1,30 @@
+# Dependencies — never needed in Docker build context
+node_modules
+**/node_modules
+
+# Git history
+.git
+.github
+
+# Build outputs (each stage re-builds from source)
+**/.next
+**/dist
+**/.turbo
+
+# Mobile app — not part of any backend service
+apps/mobile
+
+# Dev / environment files
+.env
+.env.local
+.env.*.local
+# .env.example is kept so docs are available
+
+# Editor / OS artefacts
+.DS_Store
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Test coverage
+coverage
