@@ -60,6 +60,9 @@ importers:
       stripe:
         specifier: 17.7.0
         version: 17.7.0
+      tsx:
+        specifier: 4.21.0
+        version: 4.21.0
       zod:
         specifier: 4.4.2
         version: 4.4.2
@@ -67,9 +70,6 @@ importers:
       '@types/node':
         specifier: 22.15.21
         version: 22.15.21
-      tsx:
-        specifier: 4.21.0
-        version: 4.21.0
       typescript:
         specifier: 5.7.3
         version: 5.7.3
@@ -223,6 +223,9 @@ importers:
       '@whisky-hunter/database':
         specifier: workspace:*
         version: link:../database
+      '@whisky-hunter/search':
+        specifier: workspace:*
+        version: link:../search
       '@whisky-hunter/shared':
         specifier: workspace:*
         version: link:../shared
