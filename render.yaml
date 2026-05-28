@@ -1,0 +1,76 @@
+services:
+  # ── API Web Service ──────────────────────────────────────────────────────────
+  - type: web
+    name: whisky-hunter-api
+    region: frankfurt
+    runtime: docker
+    dockerfilePath: apps/api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    plan: starter
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: BETTER_AUTH_SECRET
+        generateValue: true
+      - key: BETTER_AUTH_URL
+        value: https://whisky-hunter-api.onrender.com
+      - key: TYPESENSE_HOST
+        sync: false
+      - key: TYPESENSE_PORT
+        value: "443"
+      - key: TYPESENSE_PROTOCOL
+        value: https
+      - key: TYPESENSE_API_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM
+        value: "WhiskyHunter <noreply@whisky-hunter.com>"
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+
+  # ── Scraper Background Worker ─────────────────────────────────────────────────
+  - type: worker
+    name: whisky-hunter-scraper
+    region: frankfurt
+    runtime: docker
+    dockerfilePath: packages/scraper/Dockerfile
+    dockerContext: .
+    plan: starter
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: TYPESENSE_HOST
+        sync: false
+      - key: TYPESENSE_PORT
+        value: "443"
+      - key: TYPESENSE_PROTOCOL
+        value: https
+      - key: TYPESENSE_API_KEY
+        sync: false
+      - key: SCRAPER_HEADLESS
+        value: "true"
+      - key: WORKER_CONCURRENCY
+        value: "2"
+
+databases:
+  - name: whisky-hunter-db
+    region: frankfurt
+    plan: free
+    databaseName: whisky_hunter
+    user: whisky_hunter
