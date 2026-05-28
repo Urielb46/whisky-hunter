@@ -332,4 +332,46 @@ export function ProductCard({ product }: ProductCardProps) {
             <p className="text-xs italic" style={{ color: 'var(--text-muted)' }}>Price unavailable</p>
           )}
         </div>
-     
+      </div>
+      </Link>
+
+      {/* Buy now button — outside <Link> to avoid nested <a> tags */}
+      {bp?.sourceUrl && bp.inStock && (
+        <div className="px-4 pb-4 pt-2">
+          <a
+            href={bp.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            onClick={(e) => e.stopPropagation()}
+            className="flex w-full items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-semibold transition-opacity hover:opacity-80"
+            style={{
+              background: 'var(--primary)',
+              color: '#0A0A0A',
+              textDecoration: 'none',
+            }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 14, fontVariationSettings: "'FILL' 1" }}>
+              shopping_bag
+            </span>
+            Buy at {bp.retailerName}
+          </a>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Chip({ children }: { children: React.ReactNode }) {
+  return (
+    <span
+      className="rounded-md px-2 py-0.5 text-xs font-medium"
+      style={{
+        background: 'var(--surface-elevated)',
+        border: '1px solid var(--border)',
+        color: 'var(--text-subtle)',
+      }}
+    >
+      {children}
+    </span>
+  );
+}

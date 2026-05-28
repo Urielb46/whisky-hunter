@@ -6,4 +6,5 @@ startCommand = "pnpm --filter @whisky-hunter/scraper exec tsx src/worker-entry.t
 healthcheckPath = ""
 restartPolicyType = "always"
 
-[environments.produc
+[environments.production.variables]
+NODE_ENV = "production"

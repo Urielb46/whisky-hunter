@@ -47,4 +47,15 @@ export function Footer() {
         </div>
 
         <div
-          className="mt-10 flex flex-col items-cent
+          className="mt-10 flex flex-col items-center justify-between gap-3 pt-6 text-xs sm:flex-row"
+          style={{ borderTop: '1px solid var(--border)', color: 'var(--text-muted)' }}
+        >
+          <p>© {new Date().getFullYear()} WhiskyHunter. Prices updated daily — always verify before purchase.</p>
+          <p className="font-medium" style={{ color: 'var(--text-subtle)' }}>
+            🔞 Must be 21+ to purchase alcohol. Please drink responsibly.
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+}

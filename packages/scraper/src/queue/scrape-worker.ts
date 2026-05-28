@@ -95,4 +95,27 @@ async function process(
 
 export function createScrapeWorker(
   concurrency = 2,
-): Worker<ScrapeJobData, Scrap
+): Worker<ScrapeJobData, ScrapeJobResult> {
+  const worker = new Worker<ScrapeJobData, ScrapeJobResult>(
+    SCRAPE_QUEUE_NAME,
+    process,
+    {
+      connection: redisConnection,
+      concurrency,
+      limiter: { max: 10, duration: 60_000 },
+    },
+  );
+
+  worker.on('completed', (job, result) => {
+    console.log(
+      `[worker] ✓ job ${job.id} retailer=${result.retailerId} ` +
+        `inserted=${result.listingsInserted} ms=${result.durationMs}`,
+    );
+  });
+
+  worker.on('failed', (job, err) => {
+    console.error(`[worker] ✗ job ${job?.id} error: ${err.message}`);
+  });
+
+  return worker;
+}

@@ -1,1 +1,1 @@
-export { getExchangeRates, getExchangeRatesWithTimestamp, conver
+export { getExchangeRates, getExchangeRatesWithTimestamp, convertCurrency } from './rates.js';

@@ -452,4 +452,29 @@ export default async function ProductPage({ params }: ProductPageProps) {
                       <span style={{ fontSize: 32 }}>🥃</span>
                     )}
                   </div>
-                  <div class
+                  <div className="p-3">
+                    <p
+                      className="text-xs font-semibold leading-snug line-clamp-2"
+                      style={{ color: 'var(--text)' }}
+                    >
+                      {item.name}
+                    </p>
+                    {bp && (
+                      <p
+                        className="mt-1.5 flex items-center gap-1 text-xs font-bold"
+                        style={{ color: 'var(--primary)' }}
+                      >
+                        <span className="material-symbols-outlined" style={{ fontSize: 12 }}>trending_down</span>
+                        {sym}{bp.priceLocal.toFixed(0)}
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
