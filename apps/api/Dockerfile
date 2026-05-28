@@ -13,7 +13,9 @@ COPY packages/database/package.json ./packages/database/
 COPY packages/shared/package.json   ./packages/shared/
 COPY packages/search/package.json   ./packages/search/
 
-RUN pnpm install --frozen-lockfile
+# Use --no-frozen-lockfile so new deps (e.g. ioredis) are installed even if
+# lockfile hasn't been regenerated locally yet.
+RUN pnpm install --no-frozen-lockfile
 
 # ── Stage 2: Build ────────────────────────────────────────────────────────────
 FROM node:22-alpine AS build
@@ -62,7 +64,7 @@ COPY --from=build /app/packages/shared/node_modules   ./packages/shared/node_mod
 COPY --from=build /app/packages/shared/package.json   ./packages/shared/package.json
 
 COPY --from=build /app/packages/search/dist     ./packages/search/dist
-COPY --from=build /app/packages/search/node_modules   ./packages/search/node_modules
+COPY --from=build /app/packages/search/node_hmodules   ./packages/search/node_modules
 COPY --from=build /app/packages/search/package.json   ./packages/search/package.json
 
 COPY --from=build /app/node_modules             ./node_modules
