@@ -1,13 +1,12 @@
 services:
-  # ── API Web Service ──────────────────────────────────────────────────────────
+  # ── API Web Service ───────────────────────────────────────────────────────────
   - type: web
     name: whisky-hunter-api
     region: frankfurt
     runtime: docker
     dockerfilePath: apps/api/Dockerfile
-    dockerContext: .
     healthCheckPath: /health
-    plan: starter
+    plan: free
     autoDeploy: true
     envVars:
       - key: NODE_ENV
@@ -15,9 +14,9 @@ services:
       - key: PORT
         value: "3000"
       - key: DATABASE_URL
-        sync: false
-      - key: REDIS_URL
-        sync: false
+        fromDatabase:
+          name: whisky-hunter-db
+          property: connectionString
       - key: BETTER_AUTH_SECRET
         generateValue: true
       - key: BETTER_AUTH_URL
@@ -38,37 +37,11 @@ services:
         sync: false
       - key: STRIPE_WEBHOOK_SECRET
         sync: false
-
-  # ── Scraper Background Worker ─────────────────────────────────────────────────
-  - type: worker
-    name: whisky-hunter-scraper
-    region: frankfurt
-    runtime: docker
-    dockerfilePath: packages/scraper/Dockerfile
-    dockerContext: .
-    plan: starter
-    autoDeploy: true
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: DATABASE_URL
-        sync: false
       - key: REDIS_URL
         sync: false
-      - key: TYPESENSE_HOST
-        sync: false
-      - key: TYPESENSE_PORT
-        value: "443"
-      - key: TYPESENSE_PROTOCOL
-        value: https
-      - key: TYPESENSE_API_KEY
-        sync: false
-      - key: SCRAPER_HEADLESS
-        value: "true"
-      - key: WORKER_CONCURRENCY
-        value: "2"
 
 databases:
+  # ── PostgreSQL (free tier) ────────────────────────────────────────────────────
   - name: whisky-hunter-db
     region: frankfurt
     plan: free
