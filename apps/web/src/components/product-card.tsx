@@ -8,6 +8,14 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
   GBP: '£', USD: '$', EUR: '€', CAD: 'CA$',
 };
 
+/**
+ * Returns a proxied image URL to bypass retailer hotlink protection.
+ * The /api/img route fetches images server-side with a browser-like Referer.
+ */
+function proxyImageUrl(url: string): string {
+  return `/api/img?url=${encodeURIComponent(url)}`;
+}
+
 const COUNTRY_FLAG: Record<string, string> = {
   GB: '🇬🇧', US: '🇺🇸', FR: '🇫🇷', DE: '🇩🇪', CA: '🇨🇦',
   JP: '🇯🇵', AU: '🇦🇺', IT: '🇮🇹', ES: '🇪🇸', NL: '🇳🇱',
@@ -198,20 +206,20 @@ export function ProductCard({ product }: ProductCardProps) {
     .replace(/\b\w/g, (c: string) => c.toUpperCase()) ?? 'Whisky';
 
   return (
-    <Link
-      href={`/products/${product.id}`}
+    <div
       className="product-card group flex flex-col rounded-xl overflow-hidden"
       style={{
         background: 'var(--surface)',
         border: '1px solid var(--border)',
       }}
     >
+      <Link href={`/products/${product.id}`} className="flex flex-col flex-1" style={{ textDecoration: 'none', color: 'inherit' }}>
       {/* Image area */}
       <div className="relative overflow-hidden" style={{ height: 224 }}>
         {product.imageUrl && !imgError ? (
           /* eslint-disable-next-line @next/next/no-img-element */
           <img
-            src={product.imageUrl}
+            src={proxyImageUrl(product.imageUrl)}
             alt={product.name}
             onError={() => setImgError(true)}
             className="h-full w-full object-contain p-5 transition-transform duration-500 group-hover:scale-105"
@@ -324,22 +332,4 @@ export function ProductCard({ product }: ProductCardProps) {
             <p className="text-xs italic" style={{ color: 'var(--text-muted)' }}>Price unavailable</p>
           )}
         </div>
-      </div>
-    </Link>
-  );
-}
-
-function Chip({ children }: { children: React.ReactNode }) {
-  return (
-    <span
-      className="rounded-md px-2 py-0.5 text-xs font-medium"
-      style={{
-        background: 'var(--surface-elevated)',
-        border: '1px solid var(--border)',
-        color: 'var(--text-subtle)',
-      }}
-    >
-      {children}
-    </span>
-  );
-}
+     

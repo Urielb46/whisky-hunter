@@ -1,4 +1,8 @@
 import { getProduct, searchWhisky } from '@/lib/api';
+
+function proxyImageUrl(url: string): string {
+  return `/api/img?url=${encodeURIComponent(url)}`;
+}
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
@@ -89,7 +93,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             {product.imageUrl ? (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img
-                src={product.imageUrl}
+                src={proxyImageUrl(product.imageUrl)}
                 alt={product.name}
                 className="relative h-full w-full object-contain p-8"
               />
@@ -291,11 +295,16 @@ export default async function ProductPage({ params }: ProductPageProps) {
                       <a
                         href={p.sourceUrl}
                         target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all hover:opacity-90"
-                        style={{ background: 'var(--primary)', color: '#0A0A0A' }}
+                        rel="noopener noreferrer sponsored"
+                        className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-bold transition-all hover:opacity-90 active:scale-95"
+                        style={
+                          i === 0
+                            ? { background: 'var(--primary)', color: '#0A0A0A' }
+                            : { background: 'var(--surface-elevated)', border: '1px solid var(--border)', color: 'var(--text)' }
+                        }
                       >
-                        View <span className="material-symbols-outlined" style={{ fontSize: 12 }}>open_in_new</span>
+                        Buy now
+                        <span className="material-symbols-outlined" style={{ fontSize: 14 }}>open_in_new</span>
                       </a>
                     )}
                   </div>
@@ -364,17 +373,23 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 <a
                   href={bestPrice.sourceUrl}
                   target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold transition-all hover:opacity-90 active:scale-95"
+                  rel="noopener noreferrer sponsored"
+                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold transition-all hover:opacity-90 active:scale-95"
                   style={{
                     background: 'var(--primary)',
                     color: '#0A0A0A',
                     boxShadow: '0 4px 16px rgba(212,168,83,0.3)',
                   }}
                 >
-                  View at {bestPrice.retailerName}
-                  <span className="material-symbols-outlined" style={{ fontSize: 14 }}>open_in_new</span>
+                  <span className="material-symbols-outlined" style={{ fontSize: 16, fontVariationSettings: "'FILL' 1" }}>shopping_bag</span>
+                  Buy at {bestPrice.retailerName}
+                  <span className="material-symbols-outlined" style={{ fontSize: 13 }}>open_in_new</span>
                 </a>
+              )}
+              {isRealUrl(bestPrice.sourceUrl) && (
+                <p className="mt-2 text-center text-xs" style={{ color: 'var(--text-muted)', opacity: 0.6 }}>
+                  Opens retailer site in new tab · Always verify price before checkout
+                </p>
               )}
             </div>
           )}
@@ -432,34 +447,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   >
                     {item.imageUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={item.imageUrl} alt={item.name} className="h-20 w-full object-contain p-2" />
+                      <img src={proxyImageUrl(item.imageUrl)} alt={item.name} className="h-20 w-full object-contain p-2" />
                     ) : (
                       <span style={{ fontSize: 32 }}>🥃</span>
                     )}
                   </div>
-                  <div className="p-3">
-                    <p
-                      className="text-xs font-semibold leading-snug line-clamp-2"
-                      style={{ color: 'var(--text)' }}
-                    >
-                      {item.name}
-                    </p>
-                    {bp && (
-                      <p
-                        className="mt-1.5 flex items-center gap-1 text-xs font-bold"
-                        style={{ color: 'var(--primary)' }}
-                      >
-                        <span className="material-symbols-outlined" style={{ fontSize: 12 }}>trending_down</span>
-                        {sym}{bp.priceLocal.toFixed(0)}
-                      </p>
-                    )}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+                  <div class

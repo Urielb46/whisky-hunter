@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { calculateTrueCost, checkShippingRestriction } from '@whisky-hunter/shared';
+import { calculateTrueCost, checkShippingRestriction, getExchangeRatesWithTimestamp } from '@whisky-hunter/shared';
 
 const cost = new Hono();
 
@@ -30,9 +30,12 @@ const CostQuerySchema = z.object({
 cost.get('/', zValidator('query', CostQuerySchema), async (c) => {
   const { destinationState, ...input } = c.req.valid('query');
   try {
-    const breakdown = await calculateTrueCost(input);
+    const [breakdown, { fetchedAt }] = await Promise.all([
+      calculateTrueCost(input),
+      getExchangeRatesWithTimestamp(input.currency),
+    ]);
     const restriction = checkShippingRestriction(input.destinationCountry, destinationState);
-    return c.json({ ...breakdown, restriction });
+    return c.json({ ...breakdown, restriction, ratesTimestamp: fetchedAt });
   } catch (err) {
     return c.json({ error: String(err) }, 500);
   }

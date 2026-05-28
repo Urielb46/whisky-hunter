@@ -9,8 +9,12 @@ import {
   isTypesenseConfigured,
   searchWhiskies,
 } from '@whisky-hunter/search';
+import { searchRateLimit } from '../middleware/search-rate-limit.js';
 
 const search = new Hono();
+
+// Apply FREQ-01 rate limiting before all search handlers
+search.use('/', searchRateLimit);
 
 // ---------------------------------------------------------------------------
 // Sort options — SQL fallback path
@@ -144,6 +148,7 @@ async function sqlSearch(c: Context<any>, params: ValidatedParams) {
         r.country AS retailer_country,
         ps.in_stock,
         ps.scraped_at,
+        sm.source_url,
         (ps.scraped_at < NOW() - INTERVAL '48 hours') AS is_stale
       FROM price_snapshots ps
       JOIN source_mappings sm ON sm.id = ps.source_mapping_id
@@ -173,6 +178,7 @@ async function sqlSearch(c: Context<any>, params: ValidatedParams) {
     in_stock: boolean | null;
     scraped_at: string | null;
     is_stale: boolean | null;
+    source_url: string | null;
   };
 
   const [rows, countRows] = await Promise.all([
@@ -222,6 +228,7 @@ async function sqlSearch(c: Context<any>, params: ValidatedParams) {
           inStock:         r.in_stock,
           scrapedAt:       r.scraped_at,
           isStale:         r.is_stale ?? false,
+          sourceUrl:       r.source_url ?? undefined,
         }
       : null,
   }));

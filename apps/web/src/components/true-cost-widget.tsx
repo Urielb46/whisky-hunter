@@ -147,7 +147,16 @@ export function TrueCostWidget({ bestPrice, volumeMl, abv }: TrueCostWidgetProps
           )}
 
           <p className="text-xs" style={{ color: 'var(--text-muted)', opacity: 0.7 }}>
-            Rates via ECB. Estimates only.
+            {'Rates via ECB'}
+            {data.ratesTimestamp ? (
+              <> · as of{' '}
+                {new Date(data.ratesTimestamp).toLocaleString(undefined, {
+                  month: 'short', day: 'numeric',
+                  hour: '2-digit', minute: '2-digit',
+                })}
+              </>
+            ) : null}
+            {' · Estimates only.'}
           </p>
         </div>
       )}

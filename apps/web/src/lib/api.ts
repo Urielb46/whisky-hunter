@@ -21,6 +21,8 @@ export interface SearchResult {
     inStock: boolean;
     scrapedAt: string;
     isStale: boolean;
+    /** Direct URL to product on retailer site — may be empty string if not scraped */
+    sourceUrl?: string;
   } | null;
   reviewScore: number | null;
 }
@@ -65,6 +67,8 @@ export interface TrueCost {
   currency: string;
   dutyDataAvailable: boolean;
   lpa: number;
+  /** ISO 8601 timestamp of when FX rates were last fetched — COST-04 */
+  ratesTimestamp?: string;
   restriction?: {
     restricted: boolean;
     warning?: string;

@@ -8,6 +8,7 @@ import { db } from '@whisky-hunter/database';
 import { priceSnapshots, sourceMappings } from '@whisky-hunter/database';
 import { eq, and } from 'drizzle-orm';
 import type { RawProduct } from '@whisky-hunter/shared';
+import { syncProductsToTypesense } from '@whisky-hunter/search';
 
 /**
  * Look up source mapping for a scraped product.
@@ -21,6 +22,7 @@ async function resolveMapping(
     .select({
       id: sourceMappings.id,
       canonicalProductId: sourceMappings.canonicalProductId,
+      sourceUrl: sourceMappings.sourceUrl,
     })
     .from(sourceMappings)
     .where(
@@ -32,6 +34,13 @@ async function resolveMapping(
     .limit(1);
 
   if (!rows[0]) return null;
+
+  if (rows[0].sourceUrl !== raw.url) {
+    await db.update(sourceMappings)
+      .set({ sourceUrl: raw.url })
+      .where(eq(sourceMappings.id, rows[0].id));
+  }
+
   return {
     sourceMappingId: rows[0].id,
     canonicalProductId: rows[0].canonicalProductId,
@@ -51,6 +60,7 @@ async function process(
 
   let listingsInserted = 0;
   const scrapedAt = new Date();
+  const insertedProductIds = new Set<string>();
 
   for (const raw of products) {
     const mapping = await resolveMapping(raw);
@@ -66,6 +76,13 @@ async function process(
     });
 
     listingsInserted++;
+    insertedProductIds.add(mapping.canonicalProductId);
+  }
+
+  if (insertedProductIds.size > 0) {
+    syncProductsToTypesense([...insertedProductIds]).catch((err: Error) =>
+      console.warn('[worker] Typesense sync failed (non-fatal):', err.message)
+    );
   }
 
   return {
@@ -78,27 +95,4 @@ async function process(
 
 export function createScrapeWorker(
   concurrency = 2,
-): Worker<ScrapeJobData, ScrapeJobResult> {
-  const worker = new Worker<ScrapeJobData, ScrapeJobResult>(
-    SCRAPE_QUEUE_NAME,
-    process,
-    {
-      connection: redisConnection,
-      concurrency,
-      limiter: { max: 10, duration: 60_000 },
-    },
-  );
-
-  worker.on('completed', (job, result) => {
-    console.log(
-      `[worker] ✓ job ${job.id} retailer=${result.retailerId} ` +
-        `inserted=${result.listingsInserted} ms=${result.durationMs}`,
-    );
-  });
-
-  worker.on('failed', (job, err) => {
-    console.error(`[worker] ✗ job ${job?.id} error: ${err.message}`);
-  });
-
-  return worker;
-}
+): Worker<ScrapeJobData, Scrap

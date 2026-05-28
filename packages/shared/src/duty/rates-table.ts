@@ -1,7 +1,7 @@
 /**
  * Duty + VAT rates for spirits (HS 2208) by destination country.
  * Sources:
- *  - UK: HMRC excise £28.74/LPA (Budget 2024) + 20% VAT
+ *  - UK: HMRC excise £31.64/LPA (Autumn Budget 2024, effective Feb 2025) + 20% VAT
  *  - EU (DE example): 13.03€/LPA + 19% VAT
  *  - US: $13.50/proof-gallon federal excise + state varies (avg ~5%)
  *  - CA: ~$11.696/LPA federal + provincial (avg 10%)
@@ -28,7 +28,7 @@ export interface DutyRate {
 export const DUTY_RATES: DutyRate[] = [
   {
     country: 'GB',
-    excisePerLpa: 28.74,
+    excisePerLpa: 31.64, // HMRC Autumn Budget 2024, effective 1 Feb 2025
     exciseCurrency: 'GBP',
     vatRate: 0.20,
     importDutyRate: 0, // UK domestic — no import duty

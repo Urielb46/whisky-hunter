@@ -2,9 +2,8 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "node dist/worker-entry.js"
+startCommand = "pnpm --filter @whisky-hunter/scraper exec tsx src/worker-entry.ts"
 healthcheckPath = ""
 restartPolicyType = "always"
 
-[environments.production.variables]
-NODE_ENV = "production"
+[environments.produc

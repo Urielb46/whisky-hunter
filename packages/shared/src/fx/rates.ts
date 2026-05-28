@@ -138,6 +138,21 @@ export async function getExchangeRates(base = 'GBP'): Promise<Record<string, num
 }
 
 /**
+ * Returns exchange rates together with the ISO 8601 timestamp of when the
+ * rates were last fetched from the Frankfurter API (COST-04).
+ */
+export async function getExchangeRatesWithTimestamp(
+  base = 'GBP',
+): Promise<{ rates: Record<string, number>; fetchedAt: string }> {
+  const rates = await getExchangeRates(base);
+
+  // The in-process memory cache stores fetchedAt; if available, use it.
+  // Otherwise fall back to "now" (rates were just fetched or came from Redis).
+  const fetchedAtMs = _memCache?.base === base ? _memCache.fetchedAt : Date.now();
+  return { rates, fetchedAt: new Date(fetchedAtMs).toISOString() };
+}
+
+/**
  * Convert an amount from one currency to another.
  */
 export async function convertCurrency(

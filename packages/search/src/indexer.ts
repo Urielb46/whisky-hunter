@@ -31,6 +31,81 @@ import type { WhiskyDocument } from './types.js';
 const BATCH_SIZE = 250;
 
 // ---------------------------------------------------------------------------
+// Shared SQL fragment + document builder (used by both main and syncProductsToTypesense)
+// ---------------------------------------------------------------------------
+
+type ProductRow = {
+  id: string;
+  name: string;
+  distillery: string;
+  age_years: number | null;
+  volume_ml: number;
+  category: string;
+  region: string | null;
+  cask_type: string | null;
+  abv: string | null;
+  image_url: string | null;
+  description: string | null;
+  review_score: string | null;
+  lwin_code: string | null;
+  whiskybase_id: string | null;
+  wb_score: string | null;
+  wb_vote_count: number | null;
+  whiskybase_url: string | null;
+  best_price_local: string | null;
+  best_currency: string | null;
+  best_retailer_id: string | null;
+  best_retailer_name: string | null;
+  best_country: string | null;
+  in_stock: boolean | null;
+  scraped_at: string | null;
+  retailer_ids: string[] | null;
+  retailer_names: string[] | null;
+};
+
+async function buildDocuments(rows: ProductRow[]): Promise<WhiskyDocument[]> {
+  const documents: WhiskyDocument[] = [];
+  for (const row of rows) {
+    const hasPrice = row.best_price_local !== null && row.best_currency !== null;
+    const bestPriceGbp = hasPrice
+      ? await toGbp(parseFloat(row.best_price_local!), row.best_currency!)
+      : undefined;
+
+    documents.push({
+      id:           row.id,
+      name:         row.name,
+      distillery:   row.distillery,
+      category:     row.category,
+      region:       row.region ?? undefined,
+      cask_type:    row.cask_type ?? undefined,
+      country:      row.best_country ?? 'GB',
+      age_years:    row.age_years ?? undefined,
+      volume_ml:    row.volume_ml,
+      abv:          row.abv ? parseFloat(row.abv) : undefined,
+      best_price_gbp:   bestPriceGbp,
+      best_price_local: hasPrice ? parseFloat(row.best_price_local!) : undefined,
+      best_currency:    row.best_currency ?? undefined,
+      retailer_count:   row.retailer_ids?.length ?? 0,
+      in_stock:         row.in_stock ?? false,
+      retailer_ids:     row.retailer_ids ?? undefined,
+      retailer_names:   row.retailer_names ?? undefined,
+      image_url:    row.image_url ?? undefined,
+      description:  row.description ?? undefined,
+      review_score: row.review_score ? parseFloat(row.review_score) : undefined,
+      lwin_code:    row.lwin_code ?? undefined,
+      whiskybase_id:  row.whiskybase_id ?? undefined,
+      wb_score:       row.wb_score ? parseFloat(row.wb_score) : undefined,
+      wb_vote_count:  row.wb_vote_count ?? undefined,
+      whiskybase_url: row.whiskybase_url ?? undefined,
+      scraped_at:   row.scraped_at
+        ? Math.floor(new Date(row.scraped_at).getTime() / 1000)
+        : Math.floor(Date.now() / 1000),
+    });
+  }
+  return documents;
+}
+
+// ---------------------------------------------------------------------------
 // FX rates (GBP pivot)
 // ---------------------------------------------------------------------------
 const rateCache = new Map<string, number>();
@@ -55,50 +130,14 @@ async function toGbp(amount: number, currency: string): Promise<number> {
 }
 
 // ---------------------------------------------------------------------------
-// Main
+// Incremental sync — called post-scrape for a subset of product IDs
 // ---------------------------------------------------------------------------
 
-async function main(): Promise<void> {
-  if (!isTypesenseConfigured()) {
-    console.error('[indexer] TYPESENSE_HOST and TYPESENSE_API_KEY must be set');
-    process.exit(1);
-  }
+export async function syncProductsToTypesense(productIds: string[]): Promise<void> {
+  if (!isTypesenseConfigured()) return;
+  if (productIds.length === 0) return;
 
-  console.log('[indexer] ensuring collection...');
   await ensureCollection(typesense);
-
-  console.log('[indexer] loading products from PostgreSQL...');
-
-  type ProductRow = {
-    id: string;
-    name: string;
-    distillery: string;
-    age_years: number | null;
-    volume_ml: number;
-    category: string;
-    region: string | null;
-    cask_type: string | null;
-    abv: string | null;
-    image_url: string | null;
-    description: string | null;
-    review_score: string | null;
-    lwin_code: string | null;
-    // Whiskybase catalog fields — שדרוג 25526 (WBASE-01–04)
-    whiskybase_id: string | null;
-    wb_score: string | null;
-    wb_vote_count: number | null;
-    whiskybase_url: string | null;
-    // aggregated price data
-    best_price_local: string | null;
-    best_currency: string | null;
-    best_retailer_id: string | null;
-    best_retailer_name: string | null;
-    best_country: string | null;
-    in_stock: boolean | null;
-    scraped_at: string | null;
-    retailer_ids: string[] | null;
-    retailer_names: string[] | null;
-  };
 
   const rows = await db.execute<ProductRow>(sql`
     WITH best_prices AS (
@@ -159,57 +198,11 @@ async function main(): Promise<void> {
     FROM products p
     LEFT JOIN best_prices  bp ON bp.product_id = p.id
     LEFT JOIN retailer_lists rl ON rl.product_id = p.id
+    WHERE p.id = ANY(${sql.raw(`ARRAY['${productIds.join("','")}']::uuid[]`)})
     ORDER BY p.name
   `);
 
-  console.log(`[indexer] loaded ${rows.length} products`);
-
-  const documents: WhiskyDocument[] = [];
-
-  for (const row of rows) {
-    const hasPrice = row.best_price_local !== null && row.best_currency !== null;
-    const bestPriceGbp = hasPrice
-      ? await toGbp(parseFloat(row.best_price_local!), row.best_currency!)
-      : undefined;
-
-    const doc: WhiskyDocument = {
-      id:           row.id,
-      name:         row.name,
-      distillery:   row.distillery,
-      category:     row.category,
-      region:       row.region ?? undefined,
-      cask_type:    row.cask_type ?? undefined,
-      country:      row.best_country ?? 'GB',
-      age_years:    row.age_years ?? undefined,
-      volume_ml:    row.volume_ml,
-      abv:          row.abv ? parseFloat(row.abv) : undefined,
-      best_price_gbp:   bestPriceGbp,
-      best_price_local: hasPrice ? parseFloat(row.best_price_local!) : undefined,
-      best_currency:    row.best_currency ?? undefined,
-      retailer_count:   row.retailer_ids?.length ?? 0,
-      in_stock:         row.in_stock ?? false,
-      retailer_ids:     row.retailer_ids ?? undefined,
-      retailer_names:   row.retailer_names ?? undefined,
-      image_url:    row.image_url ?? undefined,
-      description:  row.description ?? undefined,
-      review_score: row.review_score ? parseFloat(row.review_score) : undefined,
-      lwin_code:    row.lwin_code ?? undefined,
-      // Whiskybase catalog fields (WBASE-01–04)
-      whiskybase_id:  row.whiskybase_id ?? undefined,
-      wb_score:       row.wb_score ? parseFloat(row.wb_score) : undefined,
-      wb_vote_count:  row.wb_vote_count ?? undefined,
-      whiskybase_url: row.whiskybase_url ?? undefined,
-      scraped_at:   row.scraped_at
-        ? Math.floor(new Date(row.scraped_at).getTime() / 1000)
-        : Math.floor(Date.now() / 1000),
-    };
-
-    documents.push(doc);
-  }
-
-  // Import in batches
-  const total = documents.length;
-  let indexed = 0;
+  const documents = await buildDocuments(rows);
 
   for (let i = 0; i < documents.length; i += BATCH_SIZE) {
     const batch = documents.slice(i, i + BATCH_SIZE);
@@ -220,18 +213,13 @@ async function main(): Promise<void> {
 
     const errors = results.filter((r) => !r.success);
     if (errors.length > 0) {
-      console.error(`[indexer] ${errors.length} errors in batch:`, errors.slice(0, 3));
+      console.warn(`[indexer] ${errors.length} upsert errors in sync batch:`, errors.slice(0, 3));
     }
-
-    indexed += batch.length;
-    console.log(`[indexer] indexed ${indexed}/${total}`);
   }
 
-  console.log('[indexer] done ✓');
-  process.exit(0);
+  console.log(`[indexer] synced ${documents.length} products`);
 }
 
-main().catch((err) => {
-  console.error('[indexer] fatal error:', err);
-  process.exit(1);
-});
+// ---------------------------------------------------------------------------
+// Main
+// ----------------------------------------------

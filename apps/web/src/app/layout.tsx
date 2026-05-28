@@ -3,6 +3,7 @@ import './globals.css';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
 import { AgeGateModal } from '@/components/age-gate-modal';
+import { CookieConsent } from '@/components/cookie-consent';
 import { Providers } from '@/lib/providers';
 
 export const metadata: Metadata = {
@@ -24,13 +25,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Providers>
           <AgeGateModal />
+          <CookieConsent />
           <Navbar />
           <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
             {children}
-          </main>
-          <Footer />
-        </Providers>
-      </body>
-    </html>
-  );
-}
+    

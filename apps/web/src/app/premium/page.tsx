@@ -7,10 +7,12 @@ import Link from 'next/link';
 import { Check } from 'lucide-react';
 
 const FEATURES = [
+  'Unlimited searches (free: 50/day)',
   'Unlimited price alerts',
   'Email + push notifications',
-  'Monitor all 8 retailers',
+  'Monitor all retailers worldwide',
   'Instant price drop alerts',
+  'Unlimited Wishlist (free: 10 items)',
   'Priority support',
   'Early access to new features',
 ];
@@ -151,10 +153,10 @@ export default function PremiumPage() {
           <div className="font-semibold" style={{ color: 'var(--text-muted)' }}>Free</div>
           <div className="font-semibold" style={{ color: 'var(--primary)' }}>Premium</div>
           {[
-            ['Search whiskies', '✓', '✓'],
+            ['Search whiskies', '50/day', 'Unlimited'],
             ['Compare prices', '✓', '✓'],
             ['True cost calculator', '✓', '✓'],
-            ['Wishlist', '✓ (10)', 'Unlimited'],
+            ['Wishlist', '10 items', 'Unlimited'],
             ['Price alerts', '✗', 'Unlimited'],
             ['Push notifications', '✗', '✓'],
           ].map(([label, free, premium]) => (
