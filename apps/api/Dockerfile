@@ -1,77 +1,34 @@
-# ── Stage 1: Install dependencies ────────────────────────────────────────────
-FROM node:22-alpine AS deps
+# Single-stage: run API via tsx (no compiled dist needed)
+# Consistent with how the scraper worker runs.
+FROM node:22-alpine
 
 WORKDIR /app
 
 # Install pnpm
 RUN npm install -g pnpm@10.33.2 --quiet
 
-# Copy workspace manifests only — changes to source won't bust this layer
+# Copy workspace manifests first — dep-install layer cached separately from source
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
-COPY apps/api/package.json        ./apps/api/
+COPY apps/api/package.json          ./apps/api/
 COPY packages/database/package.json ./packages/database/
 COPY packages/shared/package.json   ./packages/shared/
 COPY packages/search/package.json   ./packages/search/
 
-# Use --no-frozen-lockfile so new deps (e.g. ioredis) are installed even if
-# lockfile hasn't been regenerated locally yet.
-RUN pnpm install --no-frozen-lockfile
+# Install all production deps (--no-frozen-lockfile tolerates lockfile drift)
+RUN pnpm install --no-frozen-lockfile --prod
 
-# ── Stage 2: Build ────────────────────────────────────────────────────────────
-FROM node:22-alpine AS build
-
-WORKDIR /app
-
-RUN npm install -g pnpm@10.33.2 --quiet
-
-# Restore installed node_modules from deps stage
-COPY --from=deps /app/node_modules          ./node_modules
-COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
-COPY --from=deps /app/packages/database/node_modules ./packages/database/node_modules
-COPY --from=deps /app/packages/shared/node_modules   ./packages/shared/node_modules
-COPY --from=deps /app/packages/search/node_modules   ./packages/search/node_modules
-
-# Copy workspace manifests (needed by pnpm filter)
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+# Copy source after deps for maximum layer-cache reuse
 COPY apps/api/         ./apps/api/
 COPY packages/database/ ./packages/database/
 COPY packages/shared/   ./packages/shared/
 COPY packages/search/   ./packages/search/
-
-# Copy root tsconfig that app configs extend
 COPY tsconfig.base.json ./
 
-RUN pnpm --filter @whisky-hunter/api build
-
-# ── Stage 3: Runtime ──────────────────────────────────────────────────────────
-FROM node:22-alpine AS runner
-
-WORKDIR /app
-
 ENV NODE_ENV=production
-
-# Copy only the built output and production node_modules
-COPY --from=build /app/apps/api/dist            ./apps/api/dist
-COPY --from=build /app/apps/api/node_modules    ./apps/api/node_modules
-COPY --from=build /app/apps/api/package.json    ./apps/api/package.json
-
-COPY --from=build /app/packages/database/dist   ./packages/database/dist
-COPY --from=build /app/packages/database/node_modules ./packages/database/node_modules
-COPY --from=build /app/packages/database/package.json ./packages/database/package.json
-
-COPY --from=build /app/packages/shared/dist     ./packages/shared/dist
-COPY --from=build /app/packages/shared/node_modules   ./packages/shared/node_modules
-COPY --from=build /app/packages/shared/package.json   ./packages/shared/package.json
-
-COPY --from=build /app/packages/search/dist     ./packages/search/dist
-COPY --from=build /app/packages/search/node_hmodules   ./packages/search/node_modules
-COPY --from=build /app/packages/search/package.json   ./packages/search/package.json
-
-COPY --from=build /app/node_modules             ./node_modules
-COPY --from=build /app/package.json             ./package.json
 
 EXPOSE 3000
 
 WORKDIR /app/apps/api
 
-CMD ["node", "dist/index.js"]
+# tsx handles TypeScript imports directly - no build step needed
+CMD ["pnpm", "start"]
